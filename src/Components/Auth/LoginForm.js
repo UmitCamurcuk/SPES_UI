@@ -2,7 +2,11 @@
 import React, { useRef } from 'react';
 import { styled } from '@mui/system';
 import { TextField, Button, Link } from '@mui/material';
-import { PostData } from '../Axios/dataRequests';
+import { postDataRequest } from '../../Axios/dataRequests';
+import { useDispatch } from 'react-redux';
+import { login } from '../../Redux/Auth/AuthSlice';
+import { useNavigate } from 'react-router-dom';
+import ShowMessage from '../Notifications/Toastify';
 
 const FormContainer = styled('div')({
     display: 'flex',
@@ -59,15 +63,27 @@ const RegisterLink = styled(Link)({
 });
 
 const LoginForm = () => {
+    //Hooks
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
+    //ImputRefs
     const usernameREF = useRef(null);
     const passwordREF = useRef(null);
 
-    const handleClickLoginButton = () => {
+    //Functions and Methods
+    const handleClickLoginButton = async () => {
         if (usernameREF.current.value === null || usernameREF.current.value === '' || usernameREF.current.value === undefined) return alert('Please Fill Username or Email field')
         else if (passwordREF.current.value === null || passwordREF.current.value === '' || passwordREF.current.value === undefined) return alert('Please Fill Password field')
         else {
-            PostData('Auth/Login', { UserName: usernameREF.current.value })
+            const userData = await postDataRequest('Auth/Login', { UserName: usernameREF.current.value, Password: passwordREF.current.value })
+            if (userData.status === 200) {
+                dispatch(login(userData));
+                ShowMessage('Login Success', 'Success');
+                navigate('/');
+            } else {
+                ShowMessage('Error', userData.Message);
+            }
         }
     }
 

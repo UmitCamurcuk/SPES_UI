@@ -1,10 +1,27 @@
 import React from 'react'
-import Grid from '@mui/material'
-function InternalLayout() {
+import { ToastContainer } from 'react-toastify'
+import Navbar from '../../Components/Navigations/Navbar'
+import BreadCrumbs from '../../Components/Navigations/BreadCrumbs'
+function InternalLayout({ children }) {
   return (
-    <Grid container spacing={0}>
-        
-    </Grid>
+    <>
+      <Navbar />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <ToastContainer />
+      <BreadCrumbs />
+      {children}
+    </>
   )
 }
 

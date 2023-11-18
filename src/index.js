@@ -6,31 +6,68 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import store from './Redux/store';
+import { Provider } from 'react-redux'
+
 import HomePage from './Pages/Home/HomePage';
 import LoginPage from './Pages/Auth/LoginPage';
 import ItemListPage from './Pages/Item/ItemListPage';
+import PrivateRoute from './Routes/PrivateRoute';
+import AttributesIndexPage from './Pages/Attributes/AttributesIndexPage';
+import ProfilePage from './Pages/User/ProfilePage';
+import LogoutPage from './Pages/Auth/LogoutPage';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <HomePage />,
-  },
-  {
     path: "/login",
     element: <LoginPage />,
   },
   {
+    path: "/Logout",
+    element: <PrivateRoute>
+      <LogoutPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/",
+    element:
+      <PrivateRoute>
+        <HomePage />
+      </PrivateRoute>,
+  },
+  {
+    path: "/Home",
+    element: <PrivateRoute>
+      <HomePage />
+    </PrivateRoute>,
+  },
+  {
     path: "/ItemList",
-    element: <ItemListPage />,
+    element: <PrivateRoute>
+      <ItemListPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/Attributes",
+    element: <PrivateRoute>
+      <AttributesIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/Profile",
+    element: <PrivateRoute>
+      <ProfilePage />
+    </PrivateRoute>,
   },
 ]);
 
 root.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

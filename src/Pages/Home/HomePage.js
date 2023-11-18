@@ -1,8 +1,13 @@
 import React from 'react'
+import InternalLayout from '../Layouts/InternalLayout'
 
 function HomePage() {
   return (
-    <div>HomePage</div>
+    <InternalLayout>
+      <div>
+        HOME PAGE
+      </div>
+    </InternalLayout>
   )
 }
 
