@@ -16,6 +16,8 @@ import PrivateRoute from './Routes/PrivateRoute';
 import AttributesIndexPage from './Pages/Attributes/AttributesIndexPage';
 import ProfilePage from './Pages/User/ProfilePage';
 import LogoutPage from './Pages/Auth/LogoutPage';
+import AttributeDetailsPage from './Pages/Attributes/AttributeDetailsPage';
+import CreateAttributePage from './Pages/Attributes/CreateAttributePage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -54,6 +56,18 @@ const router = createBrowserRouter([
     path: "/Attributes",
     element: <PrivateRoute>
       <AttributesIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "Attribute/Create",
+    element: <PrivateRoute>
+      <CreateAttributePage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/Attribute/Detail/:id",
+    element: <PrivateRoute>
+      <AttributeDetailsPage />
     </PrivateRoute>,
   },
   {

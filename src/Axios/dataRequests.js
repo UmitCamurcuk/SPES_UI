@@ -15,10 +15,9 @@ const api = axios.create({
 export const getDataRequest = async (url) => {
     try {
         const response = await api.get(url);
-        console.log('test')
         return response.data;
     } catch (error) {
-        if(error.response.status === 401){
+        if (error.response.status === 401) {
             window.location.href = '/Logout'
         }
         console.error('GET isteği sırasında hata:', error);
@@ -30,9 +29,11 @@ export const getDataRequest = async (url) => {
 export const postDataRequest = async (url, data) => {
     try {
         const response = await api.post(url, data);
-        console.log('test')
         return response.data;
     } catch (error) {
+        if (error.response.status === 401) {
+            window.location.href = '/Logout'
+        }
         console.error('POST isteği sırasında hata:', error);
         throw error;
     }
@@ -44,6 +45,9 @@ export const putDataRequest = async (url, data) => {
         const response = await api.put(url, data);
         return response.data;
     } catch (error) {
+        if (error.response.status === 401) {
+            window.location.href = '/Logout'
+        }
         console.error('PUT isteği sırasında hata:', error);
         throw error;
     }
@@ -55,6 +59,9 @@ export const deleteDataRequest = async (url) => {
         const response = await api.delete(url);
         return response.data;
     } catch (error) {
+        if (error.response.status === 401) {
+            window.location.href = '/Logout'
+        }
         console.error('DELETE isteği sırasında hata:', error);
         throw error;
     }

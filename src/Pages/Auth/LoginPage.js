@@ -1,6 +1,7 @@
 import React from 'react'
 import LoginForm from '../../Components/Auth/LoginForm'
 import { ToastContainer } from 'react-toastify'
+import { Box } from '@mui/material'
 function LoginPage() {
   return (
     <>
@@ -16,8 +17,9 @@ function LoginPage() {
         pauseOnHover
         theme="light"
       />
-      <LoginForm />
-      <ToastContainer />
+      <Box>
+        <LoginForm />
+      </Box>
     </>
 
   )
