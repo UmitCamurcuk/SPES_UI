@@ -22,6 +22,7 @@ import ItemTypesIndexPage from './Pages/ItemTypes/ItemTypesIndexPage';
 import FamiliesIndexPage from './Pages/Families/FamiliesIndexPage';
 import CreateItem from './Pages/Item/CreateItem';
 import CreateItemTypePage from './Pages/ItemTypes/CreateItemTypePage';
+import CreateFamilyPage from './Pages/Families/CreateFamilyPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -96,6 +97,12 @@ const router = createBrowserRouter([
     path: "/Families",
     element: <PrivateRoute>
       <FamiliesIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/Family/Create",
+    element: <PrivateRoute>
+      <CreateFamilyPage />
     </PrivateRoute>,
   },
   {

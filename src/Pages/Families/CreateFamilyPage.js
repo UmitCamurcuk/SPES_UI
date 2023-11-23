@@ -2,112 +2,128 @@ import React, { useEffect, useState } from 'react'
 import InternalLayout from '../Layouts/InternalLayout'
 import { Box, Grid, Paper, Step, StepLabel, Stepper, TextField } from '@mui/material'
 import { StyledNextStepButton, StyledPreviousStepButton, StyledSaveButton } from '../../Components/Buttons/StyledButtons';
-import ShowMessage from '../../Components/Notifications/Toastify';
 import { getDataRequest, postDataRequest } from '../../Axios/dataRequests';
+import ShowMessage from '../../Components/Notifications/Toastify';
 import { StyledSpesEngineLabels } from '../../Components/Typographys/StyledTypographys';
 import { StyledSpesEngineInput } from '../../Components/Inputs/StyledInputs';
-import { StyledSpesEngineSwitch } from '../../Components/Switchs/StyledSwitchs';
-import ItemTypeAttributesTable from '../../Components/Tables/ItemTypeAttributesTable';
 import { StyledMultiSelectDropdown } from '../../Components/DropdownSelects/StyledAutoComplates';
+import ItemTypeAttributesTable from '../../Components/Tables/ItemTypeAttributesTable';
 
-function CreateItemTypePage() {
-    //States and Variables____________________________________
-    const [itemTypeData, SetItemTypeData] = useState({
+function CreateFamilyPage() {
+    //States and Variables______________________________
+    const [familyData, SetFamilyData] = useState({
         Name: '',
         Code: '',
-        ShowOnNavbar: true,
-        Attributes: [],
-        Families: [],
-        Categories: [],
-        isActive: true,
+        AttributeGroups: [],
+        ItemType: '',
+        Attributes: []
     })
-    const [saveButtonDisabled, SetSaveButtonDisabled] = useState(false);
     const [activeStep, SetActiveStep] = useState(0);
+    const [itemTypes, SetItemTypes] = useState([]);
     const [attributes, SetAttributes] = useState([]);
-    const [families, SetFamilies] = useState([]);
+    const [saveButtonDisabled, SetSaveButtonDisabled] = useState(false);
+    const [attributeGroups, SetAttributeGroups] = useState([]);
     const steps = [
         'General Features',
-        'Attributes',
-        'Final Settings'
+        'Attribute Groups And Attributes',
+        'Final Features',
     ];
-
-
     //Hooks____________________________________________
     useEffect(() => {
-        const attributeIds = attributes.map(attribute => attribute._id);
-        SetItemTypeData(prevState => ({
-            ...prevState,
-            'Attributes': attributeIds,
-        }));
-    }, [attributes])
-
-    useEffect(() => {
-        const getFamilies = async () => {
+        const getItemTypes = async () => {
             try {
-                const response = await getDataRequest('/Family/getFamilies');
+                const response = await getDataRequest('/ItemType/getItemTypes');
                 if (response) {
-                    SetFamilies(response);
+                    SetItemTypes(response);
                 }
             } catch (error) {
                 ShowMessage('error', 'An Error Accured for requesting ItemTypes Names')
             }
         }
-        getFamilies();
+        getItemTypes();
     }, [])
 
-    //Functions and Methods______________________________________
+    useEffect(() => {
+        const getAttributeGroups = async () => {
+          try {
+            const response = await getDataRequest('/Attribute/getAttributeGroups');
+            if (response) {
+              SetAttributeGroups(response);
+            }
+          } catch (error) {
+            ShowMessage('error', 'An Error Accured for requesting ItemTypes Names')
+          }
+        }
+        getAttributeGroups();
+      }, [])
+
+    useEffect(() => {
+        const attributeIds = attributes.map(attribute => attribute._id);
+        SetFamilyData(prevState => ({
+            ...prevState,
+            'Attributes': attributeIds,
+        }));
+    }, [attributes])
+
+
+    //Functions and Methods____________________________
+
+    const handleInputChange = (e) => {
+        const tempAttribute = { ...familyData };
+        tempAttribute[e.target.name] = e.target.value;
+        SetFamilyData(tempAttribute);
+    };
+
+    const handleItemTypesChange = (event, newValue) => {
+        const selectedValues = newValue.map((option) => option._id);
+        const tempAttribute = { ...familyData };
+        tempAttribute['ItemTypes'] = selectedValues;
+        SetFamilyData(tempAttribute);
+    };
+
+    const handleAttributeGroupsChange = (event, newValue) => {
+        const selectedValues = newValue.map((option) => option._id);
+        const tempAttribute = { ...familyData };
+        tempAttribute['AttributeGroups'] = selectedValues;
+        SetFamilyData(tempAttribute);
+      };
+
     const handleClickNext = () => {
         if (activeStep === 0) {
-            if (itemTypeData.Name === '') {
-                ShowMessage('Warning', 'Please Fill Item Name Field !');
-            } else if (itemTypeData.Code === '') {
-                ShowMessage('Warning', 'Please Fill ITem Code Field !')
+            if (familyData.Name === '') {
+                ShowMessage('Warning', 'Please Fill Attribute Name Field !')
+            } else if (familyData.Code === '') {
+                ShowMessage('Warning', 'Please Fill Attribute Code Field !')
             } else {
                 SetActiveStep(activeStep + 1)
             }
         } else {
             SetActiveStep(activeStep + 1)
         }
+
     }
+
 
     const handleClickPrevious = () => {
         SetActiveStep(activeStep - 1)
     }
 
+
     const handleClickSave = async () => {
         SetSaveButtonDisabled(true);
         try {
-            const response = await postDataRequest(`/ItemType/CreateItemType`, itemTypeData);
-            console.log(response);
+            const response = await postDataRequest(`/Family/CreateFamily`, familyData);
+            if (response.Code === 200) {
+                ShowMessage('Success', 'Family Saved Succesfully.');
+            } else {
+                ShowMessage('Error', response.Message);
+            }
             SetSaveButtonDisabled(false);
-
         } catch (error) {
             ShowMessage('Error', error);
             SetSaveButtonDisabled(false);
         }
     }
-
-    const handleInputChange = (e) => {
-        SetItemTypeData(prevState => ({
-            ...prevState,
-            [e.target.name]: e.target.value.trim(),
-        }));
-    };
-
-    const handleSwitchChange = (e) => {
-        SetItemTypeData(prevState => ({
-            ...prevState,
-            [e.target.name]: e.target.checked,
-        }));
-    }
-
-    const handleFamiliyChange = (event, newValue) => {
-        const selectedValues = newValue.map((option) => option._id);
-        const tempAttribute = { ...itemTypeData };
-        tempAttribute['Families'] = selectedValues;
-        SetItemTypeData(tempAttribute);
-    };
-
     return (
         <InternalLayout>
             <Grid container spacing={0}>
@@ -123,7 +139,7 @@ function CreateItemTypePage() {
                     </Box>
                 </Grid>
 
-                <Grid sx={{ display: activeStep === 0 ? '' : 'none' }} item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid sx={{ display: activeStep === 0 ? 'block' : 'none' }} item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Paper sx={{ width: '100%', display: 'inline-grid', alignContent: 'center' }}>
                         <StyledSpesEngineLabels>
                             Name
@@ -132,6 +148,7 @@ function CreateItemTypePage() {
                             name='Name'
                             onChange={handleInputChange}
                         />
+
                         <StyledSpesEngineLabels>
                             Code
                         </StyledSpesEngineLabels>
@@ -139,17 +156,41 @@ function CreateItemTypePage() {
                             name='Code'
                             onChange={handleInputChange}
                         />
-
                         <StyledSpesEngineLabels>
-                            Families
+                            Item Types
                         </StyledSpesEngineLabels>
+
                         <StyledMultiSelectDropdown
-                            onChange={handleFamiliyChange}
-                            name='Families'
+                            onChange={handleItemTypesChange}
+                            name='ItemTypes'
                             multiple
                             filterSelectedOptions
                             id="tags-outlined"
-                            options={families}
+                            options={itemTypes}
+                            getOptionLabel={(option) => option.Name}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                />
+                            )}
+                        />
+                    </Paper>
+                </Grid>
+
+
+                <Grid sx={{ display: activeStep === 1 ? 'block' : 'none' }} item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Paper sx={{ width: '100%', display: 'inline-grid', alignContent: 'center' }}>
+
+                        <StyledSpesEngineLabels>
+                            Attribute Group
+                        </StyledSpesEngineLabels>
+                        <StyledMultiSelectDropdown
+                            onChange={handleAttributeGroupsChange}
+                            name='Attribute Groups'
+                            multiple
+                            filterSelectedOptions
+                            id="tags-outlined"
+                            options={attributeGroups}
                             getOptionLabel={(option) => option.Name}
                             renderInput={(params) => (
                                 <TextField
@@ -158,59 +199,10 @@ function CreateItemTypePage() {
                             )}
                         />
 
-                        <Box sx={{ width: '100%', display: 'grid', alignItems: 'center', justifyContent: 'center' }}>
-                            <StyledSpesEngineLabels>
-                                Is Active ?
-                            </StyledSpesEngineLabels>
-                            <StyledSpesEngineSwitch onChange={handleSwitchChange} name='isActive' defaultChecked />
-                        </Box>
-
-                        <Box sx={{ width: '100%', display: 'grid', alignItems: 'center', justifyContent: 'center' }}>
-                            <StyledSpesEngineLabels>
-                                Show on Navbar ?
-                            </StyledSpesEngineLabels>
-                            <StyledSpesEngineSwitch onChange={handleSwitchChange} name='ShowOnNavbar' defaultChecked />
-                        </Box>
-                    </Paper>
-                </Grid>
-
-                <Grid sx={{ display: activeStep === 1 ? '' : 'none' }} item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Paper sx={{ width: '100%', display: 'inline-grid', alignContent: 'center' }}>
-                        <ItemTypeAttributesTable setClickedState={SetAttributes} goToDetail={false} />
-                    </Paper>
-                </Grid>
-
-
-                <Grid sx={{ display: activeStep === 2 ? '' : 'none' }} item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Paper sx={{ width: '100%', display: 'inline-grid', alignContent: 'center' }}>
                         <StyledSpesEngineLabels>
-                            Name : {itemTypeData.Name}
+                            Other Attributes
                         </StyledSpesEngineLabels>
-
-                        <StyledSpesEngineLabels>
-                            Code : {itemTypeData.Code}
-                        </StyledSpesEngineLabels>
-
-                        <StyledSpesEngineLabels>
-                            Show On Navbar : {itemTypeData.ShowOnNavbar === true ? 'Yes' : 'No'}
-                        </StyledSpesEngineLabels>
-
-                        <StyledSpesEngineLabels>
-                            is Active ? : {itemTypeData.isActive === true ? 'Yes' : 'No'}
-                        </StyledSpesEngineLabels>
-
-                        <StyledSpesEngineLabels>
-                            Attributes
-                        </StyledSpesEngineLabels>
-
-                        {Array.isArray(attributes) && attributes.length > 0 ? (
-                            attributes.map((attribute) => (
-                                <StyledSpesEngineLabels key={attribute.Code}>
-                                    {attribute.Name}
-                                </StyledSpesEngineLabels>
-                            ))
-                        ) : (<></>)}
-
+                        <ItemTypeAttributesTable filters={{ 'AttributeGroup': 'None' }} setClickedState={SetAttributes} goToDetail={false} />
                     </Paper>
                 </Grid>
 
@@ -245,11 +237,11 @@ function CreateItemTypePage() {
                         </StyledSaveButton>
                     </Box>
                 </Grid>
-
-
             </Grid>
+
+
         </InternalLayout>
     )
 }
 
-export default CreateItemTypePage
+export default CreateFamilyPage
