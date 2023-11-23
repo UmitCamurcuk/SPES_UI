@@ -16,9 +16,9 @@ const StyledTableHead = styled(TableHead)({
 });
 
 
-function AttributesTable({id, goToDetail }) {
+function ItemTypesTable({ id }) {
     //States and Variables_______________________
-    const [attributes, SetAttributes] = useState([]);
+    const [itemTypes, SetItemTypes] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [orderBy, setOrderBy] = useState('CreatedAt');
@@ -33,14 +33,14 @@ function AttributesTable({id, goToDetail }) {
     //Hooks_______________________________________
     const fetchData = useCallback(async () => {
         try {
-            const response = await postDataRequest(`/Attribute/AttributesTableData`, {
+            const response = await postDataRequest(`/ItemType/ItemTypesTableData`, {
                 page: page + 1,
                 pageSize: rowsPerPage,
                 orderBy,
                 order,
                 filters: filters
             });
-            SetAttributes(response.data.rows);
+            SetItemTypes(response.data.rows);
             setTotalRows(response.data.totalRows);
         } catch (error) {
             ShowMessage('Error', error);
@@ -55,10 +55,9 @@ function AttributesTable({id, goToDetail }) {
 
     //Functions And Methods____________________________________
     const handleRowClick = (row) => {
-        if (goToDetail) {
-            window.location.href = '/Attribute/Detail/' + row._id
-            // Burada tıklanan satır ile ilgili başka bir şeyler yapabilirsiniz
-        }
+        console.log(row);
+        window.location.href = '/Attribute/Detail/' + row._id
+        // Burada tıklanan satır ile ilgili başka bir şeyler yapabilirsiniz
     };
 
     const handleChangePage = (event, newPage) => {
@@ -126,29 +125,31 @@ function AttributesTable({id, goToDetail }) {
                                     Name
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell>Type</TableCell>
+                            <TableCell>Attributes</TableCell>
+                            <TableCell>is Active</TableCell>
+                            <TableCell>Show On Navbar</TableCell>
                             <TableCell>Created User</TableCell>
+                            <TableCell>Updated At</TableCell>       
                             <TableCell sortDirection={orderBy === 'CreatedAt' ? order : false}>
                                 <TableSortLabel active={orderBy === 'CreatedAt'} direction={orderBy === 'CreatedAt' ? order : 'asc'} onClick={() => handleSortRequest('CreatedAt')}>
                                     Created At
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell>Updated At</TableCell>
-                            <TableCell>Is Required</TableCell>
                         </TableRow>
                     </StyledTableHead>
                     <TableBody>
-                        {Array.isArray(attributes) && attributes.length > 0 ? (
+                        {Array.isArray(itemTypes) && itemTypes.length > 0 ? (
                             // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
-                            attributes.map((row) => (
+                            itemTypes.map((row) => (
                                 <TableRow key={row.Code} onClick={() => handleRowClick(row)} >
                                     <TableCell>{row.Code}</TableCell>
                                     <TableCell>{row.Name}</TableCell>
-                                    <TableCell>{row.Type}</TableCell>
-                                    <TableCell>{row.CreatedUser.Name}</TableCell>
-                                    <TableCell>{ConvertInternalDateString(row.createdAt)}</TableCell>
+                                    <TableCell>{row.Attributes.length}</TableCell>
+                                    <TableCell>{row.isActive ? <Chip label='Yes' sx={{ background: 'green', color: 'white' }} /> : <Chip label='No' sx={{ background: 'red', color: 'white' }} />}</TableCell>
+                                    <TableCell>{row.ShowOnNavbar ? <Chip label='Yes' sx={{ background: 'green', color: 'white' }} /> : <Chip label='No' sx={{ background: 'red', color: 'white' }} />}</TableCell>
+                                    <TableCell>{row.CreatedUser.Name + ' ' + row.CreatedUser.LastName}</TableCell>
                                     <TableCell>{ConvertInternalDateString(row.updatedAt)}</TableCell>
-                                    <TableCell>{row.isRequired ? <Chip label='Yes' sx={{ background: 'green', color: 'white' }} /> : <Chip label='No' sx={{ background: 'red', color: 'white' }} />}</TableCell>
+                                    <TableCell>{ConvertInternalDateString(row.createdAt)}</TableCell>
                                 </TableRow>
                             ))
                         ) : (
@@ -173,4 +174,4 @@ function AttributesTable({id, goToDetail }) {
     )
 }
 
-export default AttributesTable
+export default ItemTypesTable

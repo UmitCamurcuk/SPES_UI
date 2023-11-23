@@ -210,13 +210,13 @@ function Navbar() {
               <MenuItem key={1} onClick={() => navigate('/Attributes')}>
                 <Typography textAlign="center">Attributes</Typography>
               </MenuItem>
-              <MenuItem key={2} onClick={() => navigate('Families')}>
+              <MenuItem key={2} onClick={() => navigate('/Families')}>
                 <Typography textAlign="center">Families</Typography>
               </MenuItem>
-              <MenuItem key={3} onClick={() => navigate('ItemTypes')}>
+              <MenuItem key={3} onClick={() => navigate('/ItemTypes')}>
                 <Typography textAlign="center">Item Types</Typography>
               </MenuItem>
-              <MenuItem key={4} onClick={() => navigate('Categories')}>
+              <MenuItem key={4} onClick={() => navigate('/Categories')}>
                 <Typography textAlign="center">Categories</Typography>
               </MenuItem>
             </Menu>

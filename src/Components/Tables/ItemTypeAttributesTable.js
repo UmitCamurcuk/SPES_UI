@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled, TableSortLabel, TablePagination, Chip, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled, TableSortLabel, TablePagination, Chip, Accordion, AccordionSummary, AccordionDetails, Typography, Checkbox } from '@mui/material';
 import { postDataRequest } from '../../Axios/dataRequests';
 import ShowMessage from '../Notifications/Toastify';
 import { StyledTableFilterInput } from '../Inputs/StyledInputs';
@@ -16,8 +16,9 @@ const StyledTableHead = styled(TableHead)({
 });
 
 
-function AttributesTable({id, goToDetail }) {
+function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
     //States and Variables_______________________
+    const [selectedRows, setSelectedRows] = useState([]);
     const [attributes, SetAttributes] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -53,11 +54,22 @@ function AttributesTable({id, goToDetail }) {
     }, [fetchData]); // fetchData'yi bağımlılıklar listesine ekleyin
 
 
+    useEffect(() => {
+        setClickedState(selectedRows)
+    }, [selectedRows, setClickedState])
+
+
+
     //Functions And Methods____________________________________
     const handleRowClick = (row) => {
         if (goToDetail) {
             window.location.href = '/Attribute/Detail/' + row._id
-            // Burada tıklanan satır ile ilgili başka bir şeyler yapabilirsiniz
+        } else {
+            if (selectedRows.some(selectedRow => selectedRow.Code === row.Code)) {
+                setSelectedRows(selectedRows.filter(selectedRow => selectedRow.Code !== row.Code));
+            } else {
+                setSelectedRows([...selectedRows, row]);
+            }
         }
     };
 
@@ -116,6 +128,8 @@ function AttributesTable({id, goToDetail }) {
                 <Table>
                     <StyledTableHead>
                         <TableRow>
+                            <TableCell>Checkbox</TableCell>
+
                             <TableCell sortDirection={orderBy === 'Code' ? order : false}>
                                 <TableSortLabel active={orderBy === 'Code'} direction={orderBy === 'Code' ? order : 'asc'} onClick={() => handleSortRequest('Code')}>
                                     Code
@@ -142,6 +156,11 @@ function AttributesTable({id, goToDetail }) {
                             // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
                             attributes.map((row) => (
                                 <TableRow key={row.Code} onClick={() => handleRowClick(row)} >
+                                    <TableCell>
+                                        <Checkbox
+                                            checked={selectedRows.some(selectedRow => selectedRow.Code === row.Code)}
+                                        />
+                                    </TableCell>
                                     <TableCell>{row.Code}</TableCell>
                                     <TableCell>{row.Name}</TableCell>
                                     <TableCell>{row.Type}</TableCell>
@@ -173,4 +192,4 @@ function AttributesTable({id, goToDetail }) {
     )
 }
 
-export default AttributesTable
+export default ItemTypeAttributesTable

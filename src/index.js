@@ -18,6 +18,10 @@ import ProfilePage from './Pages/User/ProfilePage';
 import LogoutPage from './Pages/Auth/LogoutPage';
 import AttributeDetailsPage from './Pages/Attributes/AttributeDetailsPage';
 import CreateAttributePage from './Pages/Attributes/CreateAttributePage';
+import ItemTypesIndexPage from './Pages/ItemTypes/ItemTypesIndexPage';
+import FamiliesIndexPage from './Pages/Families/FamiliesIndexPage';
+import CreateItem from './Pages/Item/CreateItem';
+import CreateItemTypePage from './Pages/ItemTypes/CreateItemTypePage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -53,6 +57,12 @@ const router = createBrowserRouter([
     </PrivateRoute>,
   },
   {
+    path: "/CreateItem",
+    element: <PrivateRoute>
+      <CreateItem />
+    </PrivateRoute>,
+  },
+  {
     path: "/Attributes",
     element: <PrivateRoute>
       <AttributesIndexPage />
@@ -68,6 +78,24 @@ const router = createBrowserRouter([
     path: "/Attribute/Detail/:id",
     element: <PrivateRoute>
       <AttributeDetailsPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/ItemTypes",
+    element: <PrivateRoute>
+      <ItemTypesIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "ItemType/Create",
+    element: <PrivateRoute>
+      <CreateItemTypePage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/Families",
+    element: <PrivateRoute>
+      <FamiliesIndexPage />
     </PrivateRoute>,
   },
   {
