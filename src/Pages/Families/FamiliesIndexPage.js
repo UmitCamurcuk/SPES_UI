@@ -11,7 +11,7 @@ function FamiliesIndexPage() {
   return ( <InternalLayout>
     <Grid pl={3} container spacing={0}>
         <Grid item xl={10} lg={10} md={10} sm={12} xs={12}>
-            <StyledPageHeaderLabel>
+            <StyledPageHeaderLabel> 
                 Families List
             </StyledPageHeaderLabel>
             <StyledPageHeaderDescriptionLabel>

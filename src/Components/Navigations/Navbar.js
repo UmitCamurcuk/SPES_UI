@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import DataObjectIcon from '@mui/icons-material/DataObject';
 import { getDataRequest } from '../../Axios/dataRequests';
 import ShowMessage from '../Notifications/Toastify';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ function Navbar() {
         if (response) {
           const tempVal = [];
           response.forEach(element => {
-            tempVal.push(element.Name)
+            tempVal.push({ Name: element.Name, Code: element.Code })
           });
           SetPages(tempVal);
         }
@@ -97,7 +97,7 @@ function Navbar() {
     <AppBar position="static" sx={{ background: '#0f172a' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <DataObjectIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -146,13 +146,13 @@ function Navbar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page.Code} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.Name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <DataObjectIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -174,11 +174,11 @@ function Navbar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.Code}
+                onClick={() => navigate(`/Item/List/${page.Code}`)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.Name}
               </Button>
 
             ))}

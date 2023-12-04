@@ -8,18 +8,20 @@ import { StyledSpesEngineLabels } from '../../Components/Typographys/StyledTypog
 import { StyledSpesEngineInput } from '../../Components/Inputs/StyledInputs';
 import { StyledSelectDropdown } from '../../Components/DropdownSelects/StyledAutoComplates';
 import { StyledSpesEngineSwitch } from '../../Components/Switchs/StyledSwitchs';
+import { useParams } from 'react-router-dom';
 
-function CreateItem() {
+function CreateItemPage() {
     //States and Variables____________________________________
+    const params = useParams();
     const [itemData, SetItemData] = useState({
         ItemType: '',
         Family: '',
         Attributes: [],
         isActive: null,
-    })
+    });
     const [saveButtonDisabled, SetSaveButtonDisabled] = useState(false);
     const [activeStep, SetActiveStep] = useState(0);
-    const [itemTypes, SetItemTypes] = useState([]);
+    const [itemTypeData, SetItemTypeData] = useState([]);
     const [itemTypeAttributes, SetItemTypeAttributes] = useState([]);
     const steps = [
         'General Features',
@@ -32,9 +34,9 @@ function CreateItem() {
     useEffect(() => {
         const getItemTypes = async () => {
             try {
-                const response = await getDataRequest('/ItemType/getItemTypes');
+                const response = await getDataRequest(`/ItemType/getItemType?Code=${params.ItemTypeCode}`);
                 if (response) {
-                    SetItemTypes(response);
+                    SetItemTypeData(response);
                 }
             } catch (error) {
                 ShowMessage('error', 'An Error Accured for requesting ItemTypes Names')
@@ -60,12 +62,8 @@ function CreateItem() {
     //Functions and Methods______________________________________
     const handleClickNext = () => {
         if (activeStep === 0) {
-            if (itemData.Name === '') {
-                ShowMessage('Warning', 'Please Fill Item Name Field !')
-            } else if (itemData.Code === '') {
+           if (itemData.Code === '') {
                 ShowMessage('Warning', 'Please Fill ITem Code Field !')
-            } else if (itemData.ItemTypes.length === 0) {
-                ShowMessage('Warning', 'Please Select an ItemType !')
             } else {
                 SetActiveStep(activeStep + 1)
             }
@@ -141,20 +139,11 @@ function CreateItem() {
                     <Paper sx={{ width: '100%', display: 'inline-grid', alignContent: 'center' }}>
 
                         <StyledSpesEngineLabels>
-                            Item Type
+                            Item Code
                         </StyledSpesEngineLabels>
-                        <StyledSelectDropdown
-                            onChange={handleItemTypesChange}
-                            name='ItemTypes'
-                            filterSelectedOptions
-                            id="tags-outlined"
-                            options={itemTypes}
-                            getOptionLabel={(option) => option.Name}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                />
-                            )}
+                        <StyledSpesEngineInput
+                            name='Code'
+                            onChange={handleInputChange}
                         />
 
                         {Array.isArray(itemTypeAttributes) && itemTypeAttributes.length > 0 ? (
@@ -162,7 +151,7 @@ function CreateItem() {
                             itemTypeAttributes.map((row, index) => {
                                 if (row.Type === 'STRING') {
                                     return (
-                                        <Box key={index} sx={{ width: '100%' , display:'contents'}}>
+                                        <Box key={index} sx={{ width: '100%', display: 'contents' }}>
                                             <StyledSpesEngineLabels>
                                                 {row.Name}
                                             </StyledSpesEngineLabels>
@@ -227,4 +216,4 @@ function CreateItem() {
     )
 }
 
-export default CreateItem
+export default CreateItemPage

@@ -20,9 +20,10 @@ import AttributeDetailsPage from './Pages/Attributes/AttributeDetailsPage';
 import CreateAttributePage from './Pages/Attributes/CreateAttributePage';
 import ItemTypesIndexPage from './Pages/ItemTypes/ItemTypesIndexPage';
 import FamiliesIndexPage from './Pages/Families/FamiliesIndexPage';
-import CreateItem from './Pages/Item/CreateItem';
+import CreateItem from './Pages/Item/CreateItemPage';
 import CreateItemTypePage from './Pages/ItemTypes/CreateItemTypePage';
 import CreateFamilyPage from './Pages/Families/CreateFamilyPage';
+import CreateItemPage from './Pages/Item/CreateItemPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -52,7 +53,19 @@ const router = createBrowserRouter([
     </PrivateRoute>,
   },
   {
-    path: "/ItemList",
+    path: "/Item/List/:ItemTypeCode",
+    element: <PrivateRoute>
+      <ItemListPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/Item/Create/:ItemTypeCode",
+    element: <PrivateRoute>
+      <CreateItemPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/Item/Detail/:Code",
     element: <PrivateRoute>
       <ItemListPage />
     </PrivateRoute>,
