@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 
 export default function BreadCrumbs() {
     //Hooks _____________
@@ -21,7 +22,7 @@ export default function BreadCrumbs() {
                 underline="hover"
                 key="2"
                 color="inherit"
-                href="/Attributes"
+                href={`/${location.pathname.split('/')[1]}`}
             >
                 {location.pathname.split('/')[1]}
             </Link>
@@ -36,10 +37,12 @@ export default function BreadCrumbs() {
 
     }
     return (
-        <Stack spacing={2}>
-            <Breadcrumbs separator="›" aria-label="breadcrumb">
-                {breadcrumbs}
-            </Breadcrumbs>
-        </Stack>
+        <Box sx={{ width: '100%', padding: '1em' }}>
+            <Stack spacing={2}>
+                <Breadcrumbs separator="›" aria-label="breadcrumb">
+                    {breadcrumbs}
+                </Breadcrumbs>
+            </Stack>
+        </Box>
     );
 }

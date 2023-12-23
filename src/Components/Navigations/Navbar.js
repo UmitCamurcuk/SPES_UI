@@ -207,16 +207,19 @@ function Navbar() {
               open={Boolean(anchorElSettingsMenu)}
               onClose={handleCloseSettingsMenu}
             >
-              <MenuItem key={1} onClick={() => navigate('/Attributes')}>
+              <MenuItem key={1} onClick={() => navigate('/AttributeGroups')}>
+                <Typography textAlign="center">Attribute Groups</Typography>
+              </MenuItem>
+              <MenuItem key={2} onClick={() => navigate('/Attributes')}>
                 <Typography textAlign="center">Attributes</Typography>
               </MenuItem>
-              <MenuItem key={2} onClick={() => navigate('/Families')}>
+              <MenuItem key={3} onClick={() => navigate('/Families')}>
                 <Typography textAlign="center">Families</Typography>
               </MenuItem>
-              <MenuItem key={3} onClick={() => navigate('/ItemTypes')}>
+              <MenuItem key={4} onClick={() => navigate('/ItemTypes')}>
                 <Typography textAlign="center">Item Types</Typography>
               </MenuItem>
-              <MenuItem key={4} onClick={() => navigate('/Categories')}>
+              <MenuItem key={5} onClick={() => navigate('/Categories')}>
                 <Typography textAlign="center">Categories</Typography>
               </MenuItem>
             </Menu>

@@ -24,6 +24,9 @@ import CreateItem from './Pages/Item/CreateItemPage';
 import CreateItemTypePage from './Pages/ItemTypes/CreateItemTypePage';
 import CreateFamilyPage from './Pages/Families/CreateFamilyPage';
 import CreateItemPage from './Pages/Item/CreateItemPage';
+import CreateAttributeGroupPage from './Pages/AttributeGroups/CreateAttributeGroupPage';
+import AttributeGroupsPage from './Pages/AttributeGroups/AttributeGroupsPage';
+import AttributeGroupDetailPage from './Pages/AttributeGroups/AttributeGroupDetailPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -77,13 +80,31 @@ const router = createBrowserRouter([
     </PrivateRoute>,
   },
   {
+    path: "/AttributeGroups",
+    element: <PrivateRoute>
+      <AttributeGroupsPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/AttributeGroup/Create",
+    element: <PrivateRoute>
+      <CreateAttributeGroupPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/AttributeGroup/Detail/:id",
+    element: <PrivateRoute>
+      <AttributeGroupDetailPage />
+    </PrivateRoute>,
+  },
+  {
     path: "/Attributes",
     element: <PrivateRoute>
       <AttributesIndexPage />
     </PrivateRoute>,
   },
   {
-    path: "Attribute/Create",
+    path: "/Attribute/Create",
     element: <PrivateRoute>
       <CreateAttributePage />
     </PrivateRoute>,

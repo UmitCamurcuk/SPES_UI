@@ -31,8 +31,8 @@ export const StyledProfileInput = styled(TextField)({
 
 export const StyledTableFilterInput = styled(TextField)({
     width: '200px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginLeft: '0.5em',
+    marginRight: '0.5em',
     borderRadius: '20px',
     fontSize: '16px',
     '& .MuiOutlinedInput-root': {
