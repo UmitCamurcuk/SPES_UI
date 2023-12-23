@@ -146,7 +146,7 @@ function DetailTableWithFilters({ columns, api, link, paramfilters }) {
                                     )
                                 }
                             }
-                            return null;
+                             return null; // Eklenen bir return ifadesi
                         })
                     }
                     <StyledFilterClearButton onClick={clearFilters}>Clear Filters</StyledFilterClearButton>
@@ -172,7 +172,7 @@ function DetailTableWithFilters({ columns, api, link, paramfilters }) {
                         {Array.isArray(attributes) && attributes.length > 0 ? (
                             // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
                             attributes.map(row => (
-                                <TableRow sx={{ cursor: 'pointer' }} key={row._id} onClick={() => handleRowClick(row)}>
+                                <TableRow sx={{cursor:'pointer'}} key={row._id} onClick={() => handleRowClick(row)}>
                                     {columns.map(item => {
                                         if (item.Type === 'String') {
                                             return <TableCell key={item.Name}>{row[item.Name]}</TableCell>;
@@ -197,6 +197,14 @@ function DetailTableWithFilters({ columns, api, link, paramfilters }) {
                                                     )}
                                                 </TableCell>
                                             );
+                                        } else if (item.Type === 'Array') {
+                                            const chipElements = row[item.Name].map(element => (
+                                                <TableCell key={element.Name}>
+                                                    <Chip label={element.Name} />
+                                                </TableCell>
+                                            ));
+                                        
+                                            return chipElements;
                                         }
                                         return null; // Eklenen bir return ifadesi
                                     })}
