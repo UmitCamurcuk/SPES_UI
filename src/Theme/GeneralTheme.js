@@ -15,7 +15,7 @@ export const generalTheme = createTheme({
             contrastText: '#000',
         },
         attributeColor: {
-            HeaderBackground: '#81d4fa',
+            HeaderBackground: '#24a08b',
             main: 'black',
         },
     },

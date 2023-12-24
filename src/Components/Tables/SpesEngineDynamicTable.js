@@ -16,10 +16,10 @@ const StyledTableHead = styled(TableHead)({
 });
 
 
-function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
+function SpesEngineDynamicTable({ setClickedState, goToDetail, columns, defaultSelected, param_filters, api, param_settings }) {
     //States and Variables_______________________
-    const [selectedRows, setSelectedRows] = useState([]);
-    const [attributes, SetAttributes] = useState([]);
+    const [selectedRows, setSelectedRows] = useState(defaultSelected);
+    const [dataRows, SetDataRows] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [orderBy, setOrderBy] = useState('CreatedAt');
@@ -34,19 +34,19 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
     //Hooks_______________________________________
     const fetchData = useCallback(async () => {
         try {
-            const response = await postDataRequest(`/Attribute/AttributesTableData`, {
+            const response = await postDataRequest(`${api}`, {
                 page: page + 1,
                 pageSize: rowsPerPage,
                 orderBy,
                 order,
                 filters: filters
             });
-            SetAttributes(response.data.rows);
+            SetDataRows(response.data.rows);
             setTotalRows(response.data.totalRows);
         } catch (error) {
             ShowMessage('Error', error);
         }
-    }, [page, rowsPerPage, orderBy, order, filters]);
+    }, [page, rowsPerPage, orderBy, order, filters, api]);
 
 
     useEffect(() => {
@@ -56,7 +56,7 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
 
     useEffect(() => {
         setClickedState(selectedRows)
-    }, [selectedRows, setClickedState])
+    }, [selectedRows, setClickedState, defaultSelected])
 
 
     //Functions And Methods____________________________________
@@ -127,52 +127,72 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
                 <Table>
                     <StyledTableHead>
                         <TableRow>
-                            <TableCell>Checkbox</TableCell>
-
-                            <TableCell sortDirection={orderBy === 'Code' ? order : false}>
-                                <TableSortLabel active={orderBy === 'Code'} direction={orderBy === 'Code' ? order : 'asc'} onClick={() => handleSortRequest('Code')}>
-                                    Code
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell sortDirection={orderBy === 'Name' ? order : false}>
-                                <TableSortLabel active={orderBy === 'Name'} direction={orderBy === 'Name' ? order : 'asc'} onClick={() => handleSortRequest('Name')}>
-                                    Name
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Type</TableCell>
-                            <TableCell>Created User</TableCell>
-                            <TableCell sortDirection={orderBy === 'CreatedAt' ? order : false}>
-                                <TableSortLabel active={orderBy === 'CreatedAt'} direction={orderBy === 'CreatedAt' ? order : 'asc'} onClick={() => handleSortRequest('CreatedAt')}>
-                                    Created At
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Updated At</TableCell>
-                            <TableCell>Is Required</TableCell>
+                            <TableCell key={1}>is Selected ?</TableCell>
+                            {Array.isArray(columns) && columns.length > 0 ? (
+                                // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
+                                columns.map((row) => (
+                                    <TableCell key={row.Name} sortDirection={row.isOrder ? (orderBy === row.Code ? order : false) : (false)}>
+                                        <TableSortLabel key={row.Name} active={orderBy === row.Code} direction={orderBy === row.Code ? order : 'asc'} onClick={() => handleSortRequest(row.Code)}>
+                                            {row.Name}
+                                        </TableSortLabel>
+                                    </TableCell>
+                                ))
+                            ) : (
+                                <TableCell key="empty-key">Wrong Data</TableCell>
+                            )}
                         </TableRow>
                     </StyledTableHead>
                     <TableBody>
-                        {Array.isArray(attributes) && attributes.length > 0 ? (
+                        {Array.isArray(dataRows) && dataRows.length > 0 ? (
                             // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
-                            attributes.map((row) => (
-                                <TableRow key={row.Code} onClick={() => handleRowClick(row)} >
-                                    <TableCell>
+                            dataRows.map(row => (
+                                <TableRow sx={{ cursor: 'pointer' }} key={row._id} onClick={() => handleRowClick(row)}>
+                                    <TableCell key='1'>
                                         <Checkbox
                                             checked={selectedRows.some(selectedRow => selectedRow.Code === row.Code)}
                                         />
                                     </TableCell>
-                                    <TableCell>{row.Code}</TableCell>
-                                    <TableCell>{row.Name}</TableCell>
-                                    <TableCell>{row.Type}</TableCell>
-                                    <TableCell>{row.CreatedUser.Name}</TableCell>
-                                    <TableCell>{ConvertInternalDateString(row.createdAt)}</TableCell>
-                                    <TableCell>{ConvertInternalDateString(row.updatedAt)}</TableCell>
-                                    <TableCell>{row.isRequired ? <Chip label='Yes' sx={{ background: 'green', color: 'white' }} /> : <Chip label='No' sx={{ background: 'red', color: 'white' }} />}</TableCell>
+                                    {columns.map(item => {
+                                        if (item.Type === 'String') {
+                                            return <TableCell key={item.Name}>{row[item.Name]}</TableCell>;
+                                        } else if (item.Type === 'Date') {
+                                            return <TableCell key={item.Name}>{ConvertInternalDateString(row[item.Name])}</TableCell>;
+                                        } else if (item.Type === 'Length') {
+                                            const dynamicValue = row[item.Name];
+                                            if (Array.isArray(dynamicValue)) {
+                                                const arrayLength = dynamicValue.length;
+                                                return <TableCell key={item.Name}>{arrayLength}</TableCell>;
+                                            } else {
+                                                return <TableCell key={item.Name}>-</TableCell>;
+                                            }
+
+                                        } else if (item.Type === 'Boolean') {
+                                            return (
+                                                <TableCell key={item.Name}>
+                                                    {row[item.Name] ? (
+                                                        <Chip key={item.Name} label="Yes" sx={{ background: 'green', color: 'white' }} />
+                                                    ) : (
+                                                        <Chip key={item.Name} label="No" sx={{ background: 'red', color: 'white' }} />
+                                                    )}
+                                                </TableCell>
+                                            );
+                                        } else if (item.Type === 'Array') {
+                                            const chipElements = row[item.Name].map(element => (
+                                                <TableCell key={element.Name}>
+                                                    <Chip label={element.Name} />
+                                                </TableCell>
+                                            ));
+
+                                            return chipElements;
+                                        }
+                                        return null; // Eklenen bir return ifadesi
+                                    })}
                                 </TableRow>
                             ))
                         ) : (
                             // data boş bir dizi veya undefined/null ise yükleniyor mesajını göster
-                            <TableRow>
-                                <TableCell colSpan={7}>Veri Yok</TableCell>
+                            <TableRow key="no-data1">
+                                <TableCell key='no-data' colSpan={columns.length}>Veri Yok</TableCell>
                             </TableRow>
                         )}
                     </TableBody>
@@ -191,4 +211,4 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
     )
 }
 
-export default ItemTypeAttributesTable
+export default SpesEngineDynamicTable

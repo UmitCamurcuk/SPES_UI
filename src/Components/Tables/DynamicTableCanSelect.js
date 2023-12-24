@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled, TableSortLabel, TablePagination, Chip, Accordion, AccordionSummary, AccordionDetails, Typography, Checkbox } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled, TableSortLabel, TablePagination, Chip, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import { postDataRequest } from '../../Axios/dataRequests';
 import ShowMessage from '../Notifications/Toastify';
 import { StyledTableFilterInput } from '../Inputs/StyledInputs';
@@ -16,9 +16,8 @@ const StyledTableHead = styled(TableHead)({
 });
 
 
-function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
+function DynamicTableCanSelect({ param_columns, param_filters, param_api, param_settings }) {
     //States and Variables_______________________
-    const [selectedRows, setSelectedRows] = useState([]);
     const [attributes, SetAttributes] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -34,7 +33,7 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
     //Hooks_______________________________________
     const fetchData = useCallback(async () => {
         try {
-            const response = await postDataRequest(`/Attribute/AttributesTableData`, {
+            const response = await postDataRequest(`${param_api}`, {
                 page: page + 1,
                 pageSize: rowsPerPage,
                 orderBy,
@@ -46,7 +45,7 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
         } catch (error) {
             ShowMessage('Error', error);
         }
-    }, [page, rowsPerPage, orderBy, order, filters]);
+    }, [page, rowsPerPage, orderBy, order, filters, param_api]);
 
 
     useEffect(() => {
@@ -55,21 +54,18 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
 
 
     useEffect(() => {
-        setClickedState(selectedRows)
-    }, [selectedRows, setClickedState])
+        const attributeIds = attributes.map(attribute => attribute._id);
+        SetattributeGroupData(prevState => ({
+            ...prevState,
+            'Attributes': attributeIds,
+        }));
+    }, [attributes])
 
-
+    
     //Functions And Methods____________________________________
     const handleRowClick = (row) => {
-        if (goToDetail) {
-            window.location.href = '/Attribute/Detail/' + row._id
-        } else {
-            if (selectedRows.some(selectedRow => selectedRow.Code === row.Code)) {
-                setSelectedRows(selectedRows.filter(selectedRow => selectedRow.Code !== row.Code));
-            } else {
-                setSelectedRows([...selectedRows, row]);
-            }
-        }
+        window.location.href = '/Attribute/Detail/' + row._id
+        // Burada tıklanan satır ile ilgili başka bir şeyler yapabilirsiniz
     };
 
     const handleChangePage = (event, newPage) => {
@@ -127,27 +123,18 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
                 <Table>
                     <StyledTableHead>
                         <TableRow>
-                            <TableCell>Checkbox</TableCell>
-
-                            <TableCell sortDirection={orderBy === 'Code' ? order : false}>
-                                <TableSortLabel active={orderBy === 'Code'} direction={orderBy === 'Code' ? order : 'asc'} onClick={() => handleSortRequest('Code')}>
-                                    Code
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell sortDirection={orderBy === 'Name' ? order : false}>
-                                <TableSortLabel active={orderBy === 'Name'} direction={orderBy === 'Name' ? order : 'asc'} onClick={() => handleSortRequest('Name')}>
-                                    Name
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Type</TableCell>
-                            <TableCell>Created User</TableCell>
-                            <TableCell sortDirection={orderBy === 'CreatedAt' ? order : false}>
-                                <TableSortLabel active={orderBy === 'CreatedAt'} direction={orderBy === 'CreatedAt' ? order : 'asc'} onClick={() => handleSortRequest('CreatedAt')}>
-                                    Created At
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Updated At</TableCell>
-                            <TableCell>Is Required</TableCell>
+                            {Array.isArray(param_columns) && param_columns.length > 0 ? (
+                                // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
+                                param_columns.map((row) => (
+                                    <TableCell key={row.Code} sortDirection={row.isOrder ? (orderBy === row.Code ? order : false) : (false)}>
+                                        <TableSortLabel active={orderBy === row.Code} direction={orderBy === row.Code ? order : 'asc'} onClick={() => handleSortRequest(row.Code)}>
+                                            {row.Name}
+                                        </TableSortLabel>
+                                    </TableCell>
+                                ))
+                            ) : (
+                                <TableCell>Wrong Data</TableCell>
+                            )}
                         </TableRow>
                     </StyledTableHead>
                     <TableBody>
@@ -155,11 +142,6 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
                             // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
                             attributes.map((row) => (
                                 <TableRow key={row.Code} onClick={() => handleRowClick(row)} >
-                                    <TableCell>
-                                        <Checkbox
-                                            checked={selectedRows.some(selectedRow => selectedRow.Code === row.Code)}
-                                        />
-                                    </TableCell>
                                     <TableCell>{row.Code}</TableCell>
                                     <TableCell>{row.Name}</TableCell>
                                     <TableCell>{row.Type}</TableCell>
@@ -191,4 +173,4 @@ function ItemTypeAttributesTable({ setClickedState, goToDetail }) {
     )
 }
 
-export default ItemTypeAttributesTable
+export default DynamicTableCanSelect
