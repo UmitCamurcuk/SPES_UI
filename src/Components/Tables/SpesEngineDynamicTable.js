@@ -131,8 +131,8 @@ function SpesEngineDynamicTable({ setClickedState, goToDetail, columns, defaultS
                             {Array.isArray(columns) && columns.length > 0 ? (
                                 // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
                                 columns.map((row) => (
-                                    <TableCell key={row.Name} sortDirection={row.isOrder ? (orderBy === row.Code ? order : false) : (false)}>
-                                        <TableSortLabel key={row.Name} active={orderBy === row.Code} direction={orderBy === row.Code ? order : 'asc'} onClick={() => handleSortRequest(row.Code)}>
+                                    <TableCell key={row.Name} sortDirection={row.isOrder ? (orderBy === row.Name ? order : false) : (false)}>
+                                        <TableSortLabel key={row.Name} active={orderBy === row.Name} direction={orderBy === row.Name ? order : 'asc'} onClick={() => handleSortRequest(row.Name)}>
                                             {row.Name}
                                         </TableSortLabel>
                                     </TableCell>

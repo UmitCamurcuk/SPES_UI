@@ -40,7 +40,7 @@ function CreateAttributePage() {
     { label: 'String', Code: 'STRING' },
     { label: 'Number', Code: 'NUMBER' },
     { label: 'QR Code', Code: 'QR' },
-    { label: 'Datetime', Code: 'DATE' },
+    { label: 'Date', Code: 'DATE' },
     { label: 'File', Code: 'FILE' },
     { label: 'Image', Code: 'IMAGE' },
   ]
@@ -150,17 +150,6 @@ function CreateAttributePage() {
           });
           return newState;
         });
-      } else {
-        SetAttributeData(prevState => {
-          const newState = { ...prevState };
-          newState.AttributeValidations = prevState.AttributeValidations.map(validation => {
-            if (validation.Validation === id) {
-              return { ...validation, Value: '' };
-            }
-            return validation;
-          });
-          return newState;
-        });
       }
     } else if (type === 'BOOLEAN') {
       SetAttributeData(prevState => {
@@ -168,6 +157,28 @@ function CreateAttributePage() {
         newState.AttributeValidations = prevState.AttributeValidations.map(validation => {
           if (validation.Validation === id) {
             return { ...validation, Value: value.toString() };
+          }
+          return validation;
+        });
+        return newState;
+      });
+    } else if (type === 'DATE') {
+      SetAttributeData(prevState => {
+        const newState = { ...prevState };
+        newState.AttributeValidations = prevState.AttributeValidations.map(validation => {
+          if (validation.Validation === id) {
+            return { ...validation, Value: value };
+          }
+          return validation;
+        });
+        return newState;
+      });
+    } else {
+      SetAttributeData(prevState => {
+        const newState = { ...prevState };
+        newState.AttributeValidations = prevState.AttributeValidations.map(validation => {
+          if (validation.Validation === id) {
+            return { ...validation, Value: '' };
           }
           return validation;
         });
@@ -194,7 +205,6 @@ function CreateAttributePage() {
     const tempAttribute = { ...attributeData };
     tempAttribute[e.target.name] = e.target.checked;
     SetAttributeData(tempAttribute);
-    console.log(attributeData)
   }
 
 
@@ -214,10 +224,10 @@ function CreateAttributePage() {
     SetSaveButtonDisabled(true);
     try {
       const response = await postDataRequest(`/Attribute/CreateAttribute`, attributeData);
-      if(response.Code === 200){
-        ShowMessage('Success','Attribute Saved Succesfully.');
+      if (response.Code === 200) {
+        ShowMessage('Success', 'Attribute Saved Succesfully.');
       } else {
-        ShowMessage('Error',response.Message);
+        ShowMessage('Error', response.Message);
       }
       SetSaveButtonDisabled(false);
     } catch (error) {
@@ -225,6 +235,7 @@ function CreateAttributePage() {
       SetSaveButtonDisabled(false);
     }
   }
+
 
   return (
     <InternalLayout>
@@ -366,7 +377,9 @@ function CreateAttributePage() {
                       </StyledSpesEngineLabels>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
-                          <DatePicker label="DD.MM.YYY" />
+                          <DatePicker
+                            onChange={(e) => handleAttributeValidationsChange(validation._id, validation.Type, validation.Code, e)}
+                            label="DD.MM.YYY" />
                         </DemoContainer>
                       </LocalizationProvider>
                     </React.Fragment>

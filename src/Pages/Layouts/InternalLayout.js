@@ -4,6 +4,7 @@ import Navbar from '../../Components/Navigations/Navbar'
 import BreadCrumbs from '../../Components/Navigations/BreadCrumbs'
 import { ThemeProvider } from '@emotion/react';
 import { generalTheme } from '../../Theme/GeneralTheme';
+import { Box } from '@mui/material';
 
 
 function InternalLayout({ children }) {
@@ -23,8 +24,10 @@ function InternalLayout({ children }) {
         theme="light"
       />
       <ToastContainer />
+      <Box sx={{ background: generalTheme.palette.backgrounds.lightGray , maxWidth:'1920px', margin:'0 auto' , p:'0 1em 0 1em' , minHeight:'100vh'}}>
       <BreadCrumbs />
-      {children}
+        {children}
+      </Box>
     </ ThemeProvider>
   )
 }
