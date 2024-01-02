@@ -7,12 +7,10 @@ export const StyledMultiSelectDropdown = styled(Autocomplete)({
     marginLeft: 'auto',
     marginRight: 'auto',
     paddingBottom: 0,
-    height: '43.59px',
     borderRadius: '20px',
     fontSize: '16px',
     '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"]': {
         borderRadius: '20px',
-        height: '43.59px',
         display: 'inline-flex',
         alignContent: 'center'
     },

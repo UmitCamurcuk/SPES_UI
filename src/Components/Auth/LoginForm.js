@@ -12,12 +12,12 @@ const FormContainer = styled('div')({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent:'center',
+    justifyContent: 'center',
     padding: '20px',
     borderRadius: '0px 20px 20px 0px',
     backgroundColor: 'white',
-    height:'100%',
-    width:'100%',
+    height: '100%',
+    width: '100%',
     fontFamily: 'Poppins, sans-serif',
     '@media (max-width: 600px)': {
         width: '90%',
@@ -79,7 +79,7 @@ const LoginForm = () => {
             if (userData.status === 200) {
                 dispatch(login(userData));
                 ShowMessage('Login Success', 'Success');
-                navigate('/');
+                await navigate('/');
             } else {
                 ShowMessage('Error', userData.Message);
             }

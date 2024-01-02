@@ -15,11 +15,13 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import { getDataRequest } from '../../Axios/dataRequests';
 import ShowMessage from '../Notifications/Toastify';
 import { useNavigate } from 'react-router-dom';
+import { loadStateFromLocalStorage } from '../../Storage/Localstorage';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
   //State Variables_______________________________________
+  const user = loadStateFromLocalStorage('user');
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorElSettingsMenu, setAnchorElSettingsMenu] = React.useState(null);
@@ -248,16 +250,16 @@ function Navbar() {
               open={Boolean(anchorElSystemMenu)}
               onClose={handleCloseSystemMenu}
             >
-              <MenuItem key={11} onClick={() => navigate('Localizations')}>
+              <MenuItem key={11} onClick={() => navigate('/System/Localizations')}>
                 <Typography textAlign="center">Localizations</Typography>
               </MenuItem>
-              <MenuItem key={22} onClick={() => navigate('SystemUsers')}>
+              <MenuItem key={22} onClick={() => navigate('/System/Users')}>
                 <Typography textAlign="center">System Users</Typography>
               </MenuItem>
-              <MenuItem key={33} onClick={() => navigate('Permissions')}>
+              <MenuItem key={33} onClick={() => navigate('/System/Permissions')}>
                 <Typography textAlign="center">Permissions</Typography>
               </MenuItem>
-              <MenuItem key={44} onClick={() => navigate('Roles')}>
+              <MenuItem key={44} onClick={() => navigate('/System/Roles')}>
                 <Typography textAlign="center">Roles</Typography>
               </MenuItem>
             </Menu>
@@ -267,7 +269,7 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={user.Name && user.Name} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu

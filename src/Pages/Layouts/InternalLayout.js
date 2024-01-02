@@ -24,7 +24,7 @@ function InternalLayout({ children }) {
         theme="light"
       />
       <ToastContainer />
-      <Box sx={{ background: generalTheme.palette.backgrounds.lightGray , maxWidth:'1920px', margin:'0 auto' , p:'0 1em 0 1em' , minHeight:'100vh'}}>
+      <Box sx={{ background: generalTheme.palette.backgrounds.default , maxWidth:'1920px', margin:'0 auto' , p:'0 1em 0 1em' , minHeight:'100vh',borderRadius:'2px'}}>
       <BreadCrumbs />
         {children}
       </Box>

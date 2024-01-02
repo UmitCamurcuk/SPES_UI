@@ -28,11 +28,17 @@ export const generalTheme = createTheme({
             contrastText: '#000',
         },
         backgrounds: {
-            lightGray: '#f5f5f5'
+            lightGray: '#f5f5f5',
+            default:'rgb(238, 242, 246)',
         },
         attributeColor: {
             HeaderBackground: '#24a08b',
             main: 'black',
+        },
+        StatusColors: {
+            danger: '#FF0000',
+            success: '#5cb85c', // Success rengini doldurmanız gerekiyor
+            warning: '', // Warning rengini doldurmanız gerekiyor
         },
     },
     typography: {

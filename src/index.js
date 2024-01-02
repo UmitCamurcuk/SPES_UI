@@ -27,6 +27,10 @@ import CreateItemPage from './Pages/Item/CreateItemPage';
 import CreateAttributeGroupPage from './Pages/AttributeGroups/CreateAttributeGroupPage';
 import AttributeGroupsPage from './Pages/AttributeGroups/AttributeGroupsPage';
 import AttributeGroupDetailPage from './Pages/AttributeGroups/AttributeGroupDetailPage';
+import SystemUsersIndexPage from './Pages/System/Users/SystemUsersIndexPage';
+import PermissionsIndexPage from './Pages/System/Permissions/PermissionsIndexPage';
+import RolesIndexPage from './Pages/System/Roles/RolesIndexPage';
+import CreatePermissionPage from './Pages/System/Permissions/CreatePermissionPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -137,6 +141,30 @@ const router = createBrowserRouter([
     path: "/Family/Create",
     element: <PrivateRoute>
       <CreateFamilyPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/System/Users",
+    element: <PrivateRoute>
+      <SystemUsersIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/System/Roles",
+    element: <PrivateRoute>
+      <RolesIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/System/Permissions",
+    element: <PrivateRoute>
+      <PermissionsIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/Permissions/Create",
+    element: <PrivateRoute>
+      <CreatePermissionPage />
     </PrivateRoute>,
   },
   {

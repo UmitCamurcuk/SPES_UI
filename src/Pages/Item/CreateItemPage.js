@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import InternalLayout from '../Layouts/InternalLayout'
-import { Box, Grid, Paper, Step, StepLabel, Stepper, TextField } from '@mui/material'
+import { Box, Grid, Paper, Step, StepLabel, Stepper } from '@mui/material'
 import { StyledNextStepButton, StyledPreviousStepButton, StyledSaveButton } from '../../Components/Buttons/StyledButtons';
 import ShowMessage from '../../Components/Notifications/Toastify';
 import { getDataRequest, postDataRequest } from '../../Axios/dataRequests';
 import { StyledSpesEngineLabels } from '../../Components/Typographys/StyledTypographys';
 import { StyledSpesEngineInput } from '../../Components/Inputs/StyledInputs';
-import { StyledSelectDropdown } from '../../Components/DropdownSelects/StyledAutoComplates';
 import { StyledSpesEngineSwitch } from '../../Components/Switchs/StyledSwitchs';
 import { useParams } from 'react-router-dom';
 
@@ -43,7 +42,7 @@ function CreateItemPage() {
             }
         }
         getItemTypes();
-    }, [])
+    }, [params.ItemTypeCode])
 
     useEffect(() => {
         const getItemTypeAttributes = async () => {
@@ -99,24 +98,26 @@ function CreateItemPage() {
         console.log(itemData)
     };
 
-    const handleItemTypesChange = (event, newValue) => {
-        if (newValue) {
-            SetItemData(prevState => ({
-                ...prevState,
-                ItemType: newValue.Code,
-            }));
-        } else {
-            SetItemData(prevState => ({
-                ...prevState,
-                ItemType: '',
-            }));
-        }
-    };
+    // const handleItemTypesChange = (event, newValue) => {
+    //     if (newValue) {
+    //         SetItemData(prevState => ({
+    //             ...prevState,
+    //             ItemType: newValue.Code,
+    //         }));
+    //     } else {
+    //         SetItemData(prevState => ({
+    //             ...prevState,
+    //             ItemType: '',
+    //         }));
+    //     }
+    // };
 
     const handleisRequiredChange = (e) => {
         const tempItemData = { ...itemData };
         tempItemData[e.target.name] = e.target.checked;
         SetItemData(tempItemData);
+
+        console.log(itemTypeData)
     }
 
 

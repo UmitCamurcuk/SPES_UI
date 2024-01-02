@@ -1,36 +1,33 @@
 import React from 'react'
-import InternalLayout from '../Layouts/InternalLayout'
-import { Grid } from '@mui/material'
-import { StyledCreateButton } from '../../Components/Buttons/StyledButtons';
+import InternalLayout from '../../Layouts/InternalLayout'
+import { Grid, Typography } from '@mui/material'
+import SpesEngineDynamicTable from '../../../Components/Tables/SpesEngineDynamicTable';
+import { StyledCreateButton } from '../../../Components/Buttons/StyledButtons';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
-import { StyledPageHeaderDescriptionLabel, StyledPageHeaderLabel } from '../../Components/Typographys/StyledTypographys';
-import SpesEngineDynamicTable from '../../Components/Tables/SpesEngineDynamicTable';
 
-function AttributesIndexPage() {
+function PermissionsIndexPage() {
     return (
         <InternalLayout>
-            <Grid pl={3} container spacing={0}>
-                <Grid item xl={10} lg={10} md={10} sm={12} xs={12}>
-                    <StyledPageHeaderLabel>
-                        Attributes List
-                    </StyledPageHeaderLabel>
-                    <StyledPageHeaderDescriptionLabel>
-                        You can see and Create a new Attributes
-                    </StyledPageHeaderDescriptionLabel>
+
+            <Grid container spacing={2}>
+                <Grid item xl={10} md={10} xs={8}>
+                    <Typography>
+                        Permissions Table
+                    </Typography>
                 </Grid>
                 <Grid item xl={2} lg={2} md={2} sm={12} xs={12}>
-                    <StyledCreateButton onClick={()=> window.location.href = '/Attribute/Create'} startIcon={<AddCircleOutline />}>Create a new Attribute</StyledCreateButton>
+                    <StyledCreateButton onClick={()=> window.location.href = '/Permissions/Create'} startIcon={<AddCircleOutline />}>Create a new Permission</StyledCreateButton>
                 </Grid>
-                <Grid  item mt={3} xl={12} lg={12} md={12} sm={12} xs={12}>
-                <SpesEngineDynamicTable
-                        api='/Attribute/AttributesTableData'
-                        link='/Attribute/Detail/'
+
+                <Grid item xl={12} md={12} xs={12}>
+                    <SpesEngineDynamicTable
+                        api='/Permission/PermissionsTableData'
+                        link='/System/User/Detail/'
                         goToDetail={true}
                         canSelected={false}
-                        clickedLinkAfterClick = '/Attribute/Detail/'
+                        clickedLinkAfterClick='/System/User/Detail/'
                         paramfilters={
                             {
-                                Code: '',
                                 Name: '',
                                 isActive: '',
                             }
@@ -38,16 +35,24 @@ function AttributesIndexPage() {
                         columns={
                             [
                                 {
-                                    Name: 'Code',
-                                    Label: 'Code',
+                                    Name: 'Name',
+                                    Label: 'Name',
                                     Type: 'String',
                                     Filter: true,
                                     DefaultOrder: true,
                                     CanOrder: false,
                                 },
                                 {
-                                    Name: 'Name',
-                                    Label: 'Name',
+                                    Name: 'Code',
+                                    Label: 'Code',
+                                    Type: 'String',
+                                    Filter: true,
+                                    DefaultOrder: false,
+                                    CanOrder: false,
+                                },
+                                {
+                                    Name: 'Description',
+                                    Label: 'Description',
                                     Type: 'String',
                                     Filter: true,
                                     DefaultOrder: false,
@@ -57,37 +62,21 @@ function AttributesIndexPage() {
                                     Name: 'Type',
                                     Label: 'Type',
                                     Type: 'String',
-                                    Filter: false,
-                                    DefaultOrder: false,
-                                    CanOrder: true,
-                                },
-                                {
-                                    Name: 'AttributeGroups',
-                                    Label: 'Attribute Groups',
-                                    Type: 'Array',
-                                    Filter: false,
-                                    DefaultOrder: false,
-                                    CanOrder: false,
-                                },
-                                {
-                                    Name: 'isRequired',
-                                    Label: 'Required',
-                                    Type: 'Boolean',
                                     Filter: true,
                                     DefaultOrder: false,
                                     CanOrder: false,
                                 },
                                 {
-                                    Name: 'isActive',
-                                    Label: 'isActive ?',
-                                    Type: 'Boolean',
+                                    Name: 'Group',
+                                    Label: 'Group',
+                                    Type: 'String',
                                     Filter: true,
                                     DefaultOrder: false,
                                     CanOrder: false,
                                 },
                                 {
                                     Name: 'createdAt',
-                                    Label: 'Created',
+                                    Label: 'Created Date',
                                     Type: 'Date',
                                     Filter: false,
                                     DefaultOrder: false,
@@ -95,7 +84,7 @@ function AttributesIndexPage() {
                                 },
                                 {
                                     Name: 'updatedAt',
-                                    Label: 'Updated',
+                                    Label: 'Updated Date',
                                     Type: 'Date',
                                     Filter: false,
                                     DefaultOrder: false,
@@ -110,4 +99,4 @@ function AttributesIndexPage() {
     )
 }
 
-export default AttributesIndexPage
+export default PermissionsIndexPage

@@ -12,6 +12,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useNavigate } from 'react-router-dom';
 
 function CreateAttributePage() {
   //States and Variables______________________________
@@ -39,12 +40,15 @@ function CreateAttributePage() {
   const attributeTypes = [
     { label: 'String', Code: 'STRING' },
     { label: 'Number', Code: 'NUMBER' },
-    { label: 'QR Code', Code: 'QR' },
     { label: 'Date', Code: 'DATE' },
+    { label: 'Richt Text', Code: 'RICHTEXT' },
     { label: 'File', Code: 'FILE' },
     { label: 'Image', Code: 'IMAGE' },
+    { label: 'QR Code', Code: 'QR' }
   ]
   //Hooks____________________________________________
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getItemTypes = async () => {
       try {
@@ -133,11 +137,6 @@ function CreateAttributePage() {
   };
 
   const handleAttributeValidationsChange = (id, type, code, value) => {
-    console.log(attributeData);
-    console.log(type);
-    console.log(code);
-    console.log(value);
-
     if (type === 'NUMBER' || type === 'STRING') {
       if (value !== '') {
         SetAttributeData(prevState => {
@@ -226,6 +225,7 @@ function CreateAttributePage() {
       const response = await postDataRequest(`/Attribute/CreateAttribute`, attributeData);
       if (response.Code === 200) {
         ShowMessage('Success', 'Attribute Saved Succesfully.');
+        navigate('/Attributes')
       } else {
         ShowMessage('Error', response.Message);
       }

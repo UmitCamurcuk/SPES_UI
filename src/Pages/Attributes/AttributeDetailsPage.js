@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import InternalLayout from '../Layouts/InternalLayout'
-import { Box, Chip, Grid, IconButton, Paper, TextField, Typography } from '@mui/material'
-import { useParams } from 'react-router-dom';
-import { getDataRequest } from '../../Axios/dataRequests';
+import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Paper, TextField, Typography } from '@mui/material'
+import { useNavigate, useParams } from 'react-router-dom';
+import { deleteDataRequest, getDataRequest, putDataRequest } from '../../Axios/dataRequests';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import EditIcon from '@mui/icons-material/Edit';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { StyledSelectDropdown } from '../../Components/DropdownSelects/StyledAutoComplates';
 import SpesEngineDynamicTable from '../../Components/Tables/SpesEngineDynamicTable';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -16,6 +17,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { StyledSpesEngineSwitch } from '../../Components/Switchs/StyledSwitchs';
+import ShowMessage from '../../Components/Notifications/Toastify';
+import HistoryTable from '../../Components/Tables/HistoryTable';
 
 
 function TabPanel(props) {
@@ -62,9 +65,12 @@ function AttributeDetailsPage() {
   });
   const [attributeDataRAW, SetAttributeDataRAW] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [deleteModal, SetDeleteModal] = useState(false);
   const params = useParams();
   const [value, setValue] = useState(0);
   const [selectedAttributeGroups, SetSelectedAttributeGroups] = useState([]);
+  const [history, SetHistory] = useState([]);
+
   const attributeTypes = useMemo(() => [
     { label: 'String', Code: 'STRING' },
     { label: 'Number', Code: 'NUMBER' },
@@ -76,6 +82,8 @@ function AttributeDetailsPage() {
 
 
   //Hooks________________________________________
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getAttributeData = async () => {
       const response = await getDataRequest(`/Attribute/GetAttribute?_id=${params.id}`);
@@ -86,7 +94,15 @@ function AttributeDetailsPage() {
       }))
       SetAttributeDataRAW(response)
     }
+
+    const getHistory = async () => {
+      const response = await getDataRequest(`/History/getHistory?_id=${params.id}`);
+      SetHistory(response);
+      console.log(response);
+    }
+
     getAttributeData();
+    getHistory();
   }, [params, attributeTypes])
 
   useEffect(() => {
@@ -117,7 +133,6 @@ function AttributeDetailsPage() {
       AttributeValidations: attributeDataRAW.AttributeValidations.map((item) => ({ ...item })),
       Type: attributeTypes.find((type) => type.Code === attributeDataRAW.Type.Code) // Make sure to compare Codes
     }));
-    console.log(attributeData)
     SetSelectedAttributeGroups(attributeDataRAW?.AttributeGroups);
   }
 
@@ -154,12 +169,68 @@ function AttributeDetailsPage() {
     }
   }
 
-  const handleSaveChange = (e) => {
-    console.log(attributeData)
+  const handleSaveChange = async (e) => {
+
+    const request = {
+      _id: attributeData._id,
+      Name: attributeData.Name,
+      Code: attributeData.Code,
+      isRequired: attributeData.isRequired,
+      isActive: true,
+      ItemTypes: attributeData.ItemTypes.map(itemtypes => itemtypes._id),
+      AttributeGroups: attributeData.AttributeGroups.map(group => group._id),
+      AttributeValidations: attributeData.AttributeValidations.map(validation => ({ Validation: validation._id, Value: validation.Value })),
+    }
+
+    try {
+      const response = await putDataRequest('/Attribute/UpdateAttribute', request);
+      if (response.Code === 200) {
+        ShowMessage('Success', response.Message)
+      }
+    } catch (error) {
+      ShowMessage('Success', error)
+    }
+  }
+
+  const handleDeleteAttribute = async () => {
+    try {
+      const response = await deleteDataRequest(`/Attribute/DeleteAttribute?_id=${attributeData._id}`)
+      if (response) {
+        navigate('/Attributes')
+      }
+    } catch (error) {
+      ShowMessage('error', error)
+    }
   }
 
   return (
     <InternalLayout>
+      <React.Fragment>
+        <Dialog
+          open={deleteModal}
+          onClose={e => SetDeleteModal(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            Delete Attribute
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to do this? Once you confirm the transaction,
+              the Attribute will be deleted. Attribute cannot be deleted in the following cases:
+              If it has an Association
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant='outlined' onClick={e => SetDeleteModal(false)}>Cancel</Button>
+            <Button variant='outlined' onClick={handleDeleteAttribute} autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>
+
       <Grid container spacing={0}>
         <Grid mb={2} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Paper elevation={0} sx={{
@@ -195,6 +266,9 @@ function AttributeDetailsPage() {
                   </IconButton>
                   <IconButton onClick={handleSaveChange}>
                     <SaveIcon />
+                  </IconButton>
+                  <IconButton onClick={e => SetDeleteModal(true)}>
+                    <DeleteForeverIcon />
                   </IconButton>
                 </Box>
               </Grid>
@@ -674,6 +748,8 @@ function AttributeDetailsPage() {
               >
                 Here you can set which values ​the attribute can or cannot take depending on its type.
               </Typography>
+
+              <HistoryTable historyData={history} />
             </TabPanel>
           </Paper>
         </Grid>

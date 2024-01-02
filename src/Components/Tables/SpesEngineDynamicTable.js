@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled, TableSortLabel, TablePagination, Chip, Accordion, AccordionSummary, AccordionDetails, Typography, Checkbox } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled, TableSortLabel, TablePagination, Chip, Accordion, AccordionSummary, AccordionDetails, Typography, Checkbox, Box, Badge } from '@mui/material';
 import { postDataRequest } from '../../Axios/dataRequests';
 import ShowMessage from '../Notifications/Toastify';
 import { StyledTableFilterInput } from '../Inputs/StyledInputs';
 import { ConvertInternalDateString } from '../../Scripts/DateTimes';
 import { StyledFilterClearButton } from '../Buttons/StyledButtons';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { generalTheme } from '../../Theme/GeneralTheme';
 
 const StyledTableContainer = styled(TableContainer)({
     marginTop: '20px',
@@ -16,7 +17,7 @@ const StyledTableHead = styled(TableHead)({
 });
 
 
-function SpesEngineDynamicTable({ setClickedState, goToDetail, columns, defaultSelected, param_filters, api, param_settings }) {
+function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClick, param_filters, param_settings, setClickedState = null, defaultSelected = [] }) {
     //States and Variables_______________________
     const [selectedRows, setSelectedRows] = useState(defaultSelected);
     const [dataRows, SetDataRows] = useState([]);
@@ -55,14 +56,14 @@ function SpesEngineDynamicTable({ setClickedState, goToDetail, columns, defaultS
 
 
     useEffect(() => {
-        setClickedState(selectedRows)
+        setClickedState !== null && setClickedState(selectedRows)
     }, [selectedRows, setClickedState, defaultSelected])
 
 
     //Functions And Methods____________________________________
     const handleRowClick = (row) => {
         if (goToDetail) {
-            window.location.href = '/Attribute/Detail/' + row._id
+            window.location.href = clickedLinkAfterClick + row._id
         } else {
             if (selectedRows.some(selectedRow => selectedRow.Code === row.Code)) {
                 setSelectedRows(selectedRows.filter(selectedRow => selectedRow.Code !== row.Code));
@@ -127,13 +128,15 @@ function SpesEngineDynamicTable({ setClickedState, goToDetail, columns, defaultS
                 <Table>
                     <StyledTableHead>
                         <TableRow>
-                            <TableCell key={1}>is Selected ?</TableCell>
+                            {
+                                goToDetail !== true && <TableCell key={1}>is Selected ?</TableCell>
+                            }
                             {Array.isArray(columns) && columns.length > 0 ? (
                                 // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
                                 columns.map((row) => (
                                     <TableCell key={row.Name} sortDirection={row.isOrder ? (orderBy === row.Name ? order : false) : (false)}>
                                         <TableSortLabel key={row.Name} active={orderBy === row.Name} direction={orderBy === row.Name ? order : 'asc'} onClick={() => handleSortRequest(row.Name)}>
-                                            {row.Name}
+                                            {row.Label}
                                         </TableSortLabel>
                                     </TableCell>
                                 ))
@@ -146,12 +149,15 @@ function SpesEngineDynamicTable({ setClickedState, goToDetail, columns, defaultS
                         {Array.isArray(dataRows) && dataRows.length > 0 ? (
                             // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
                             dataRows.map(row => (
+
                                 <TableRow sx={{ cursor: 'pointer' }} key={row._id} onClick={() => handleRowClick(row)}>
-                                    <TableCell key='1'>
-                                        <Checkbox
-                                            checked={selectedRows.some(selectedRow => selectedRow.Code === row.Code)}
-                                        />
-                                    </TableCell>
+                                    {
+                                        goToDetail !== true && <TableCell key='1'>
+                                            <Checkbox
+                                                checked={selectedRows.some(selectedRow => selectedRow.Code === row.Code)}
+                                            />
+                                        </TableCell>
+                                    }
                                     {columns.map(item => {
                                         if (item.Type === 'String') {
                                             return <TableCell key={item.Name}>{row[item.Name]}</TableCell>;
@@ -176,14 +182,53 @@ function SpesEngineDynamicTable({ setClickedState, goToDetail, columns, defaultS
                                                     )}
                                                 </TableCell>
                                             );
-                                        } else if (item.Type === 'Array') {
-                                            const chipElements = row[item.Name].map(element => (
-                                                <TableCell key={element.Name}>
-                                                    <Chip label={element.Name} />
-                                                </TableCell>
-                                            ));
+                                        } else if (item.Type === 'Boolean2') {
+                                            return (
+                                                <TableCell key={item.Name}>
+                                                    {row[item.Name] ? (
+                                                        <Typography style={{ display: 'flex', alignItems: 'center' }}>
+                                                            <span style={{ marginRight: '8px', backgroundColor: generalTheme.palette.StatusColors.success, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
+                                                            Active
+                                                        </Typography>
 
-                                            return chipElements;
+                                                    ) : (
+                                                        <Typography style={{ display: 'flex', alignItems: 'center' }}>
+                                                            <span style={{ marginRight: '8px', backgroundColor: generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
+                                                            Active
+                                                        </Typography>
+                                                    )}
+                                                </TableCell>
+                                            );
+                                        } else if (item.Type === 'Array') {
+                                            return (
+                                                <TableCell key={item.Name}>
+                                                    <Box sx={{
+                                                        display: 'flex'
+                                                    }}>
+                                                        {row[item.Name].map(element => (
+                                                            <Chip key={element.Name} label={element.Name} />
+                                                        ))}
+                                                    </Box>
+                                                </TableCell>
+                                            );
+                                        } else if (item.Type === 'Role') {
+                                            if (row[item.Name].Name === 'Admin' || row[item.Name].Name === 'System Admin' ) {
+                                                return <TableCell key={item.Name}>
+                                                    <Badge sx={{ color: 'White', backgroundColor: 'rgb(0, 200, 83)', pl: 1, pr: 1, pt: 0.5, pb: 0.5, borderRadius: '10px' }}>
+                                                        <Typography fontSize='10px'>
+                                                            {row[item.Name].Name}
+                                                        </Typography>
+                                                    </Badge>
+                                                </TableCell>;
+                                            } else {
+                                                return <TableCell key={item.Name}>
+                                                    <Badge sx={{ color: 'White', backgroundColor: 'rgb(33, 150, 243)', pl: 1, pr: 1, pt: 0.5, pb: 0.5, borderRadius: '10px' }}>
+                                                        <Typography fontSize='10px'>
+                                                            {row[item.Name].Name}
+                                                        </Typography>
+                                                    </Badge></TableCell>;
+                                            }
+
                                         }
                                         return null; // Eklenen bir return ifadesi
                                     })}
