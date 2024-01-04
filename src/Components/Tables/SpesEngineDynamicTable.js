@@ -17,7 +17,7 @@ const StyledTableHead = styled(TableHead)({
 });
 
 
-function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClick, param_filters, param_settings, setClickedState = null, defaultSelected = [] }) {
+function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClick, param_filters = {}, param_settings, setClickedState = null, defaultSelected = [] }) {
     //States and Variables_______________________
     const [selectedRows, setSelectedRows] = useState(defaultSelected);
     const [dataRows, SetDataRows] = useState([]);
@@ -26,11 +26,7 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
     const [orderBy, setOrderBy] = useState('CreatedAt');
     const [order, setOrder] = useState('desc');
     const [totalRows, setTotalRows] = useState(0);
-    const [filters, setFilters] = useState({
-        Code: '',
-        Name: '',
-        Type: '',
-    });
+    const [filters, setFilters] = useState(param_filters);
 
     //Hooks_______________________________________
     const fetchData = useCallback(async () => {
@@ -117,9 +113,18 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
                     <Typography>Show Filters</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <StyledTableFilterInput label="Code" name="Code" value={filters.Code} onChange={handleFilterChange} />
-                    <StyledTableFilterInput label="Name" name="Name" value={filters.Name} onChange={handleFilterChange} />
-                    <StyledTableFilterInput label="Type" name="Type" value={filters.Type} onChange={handleFilterChange} />
+                    {
+                        columns.map(item => {
+                            if (item.Filter) {
+                                if (item.Type === 'String'){
+                                    return  <StyledTableFilterInput label={item.Label} name={item.Name} value={filters[item.Name]} onChange={handleFilterChange} />;
+                                } else if (item.Type === ''){
+                                    
+                                }
+                            }
+                        })
+                    }
+                   
                     <StyledFilterClearButton onClick={clearFilters}>Clear Filters</StyledFilterClearButton>
                 </AccordionDetails>
             </Accordion>
@@ -212,7 +217,7 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
                                                 </TableCell>
                                             );
                                         } else if (item.Type === 'Role') {
-                                            if (row[item.Name].Name === 'Admin' || row[item.Name].Name === 'System Admin' ) {
+                                            if (row[item.Name].Name === 'Admin' || row[item.Name].Name === 'System Admin') {
                                                 return <TableCell key={item.Name}>
                                                     <Badge sx={{ color: 'White', backgroundColor: 'rgb(0, 200, 83)', pl: 1, pr: 1, pt: 0.5, pb: 0.5, borderRadius: '10px' }}>
                                                         <Typography fontSize='10px'>

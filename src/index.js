@@ -31,6 +31,7 @@ import SystemUsersIndexPage from './Pages/System/Users/SystemUsersIndexPage';
 import PermissionsIndexPage from './Pages/System/Permissions/PermissionsIndexPage';
 import RolesIndexPage from './Pages/System/Roles/RolesIndexPage';
 import CreatePermissionPage from './Pages/System/Permissions/CreatePermissionPage';
+import RoleDetailPage from './Pages/System/Roles/RoleDetailPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -153,6 +154,12 @@ const router = createBrowserRouter([
     path: "/System/Roles",
     element: <PrivateRoute>
       <RolesIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/System/Role/Detail/:id",
+    element: <PrivateRoute>
+      <RoleDetailPage />
     </PrivateRoute>,
   },
   {

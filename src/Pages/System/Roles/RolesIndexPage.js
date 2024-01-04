@@ -20,7 +20,7 @@ function RolesIndexPage() {
                         link='/System/Roles/Detail/'
                         goToDetail={true}
                         canSelected={false}
-                        clickedLinkAfterClick='/System/Roles/Detail/'
+                        clickedLinkAfterClick='/System/Role/Detail/'
                         paramfilters={
                             {
                                 Name: '',
