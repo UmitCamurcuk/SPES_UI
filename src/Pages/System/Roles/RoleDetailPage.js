@@ -84,6 +84,7 @@ function RoleDetailPage() {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        console.log(history)
     };
 
     const handlePermissionChange = (e) => {
@@ -275,7 +276,7 @@ function RoleDetailPage() {
                                         permissions.map(permission => {
                                             if (permission.Group === 'System') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -309,7 +310,7 @@ function RoleDetailPage() {
                                         permissions.map(permission => {
                                             if (permission.Group === 'Attribute') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -329,7 +330,7 @@ function RoleDetailPage() {
                                                 )
                                             } else if (permission.Group === 'Attribute Group') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -350,7 +351,7 @@ function RoleDetailPage() {
                                                 )
                                             } else if (permission.Group === 'Attribute Permission') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -384,7 +385,7 @@ function RoleDetailPage() {
                                         permissions.map(permission => {
                                             if (permission.Group === 'Family') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -417,7 +418,7 @@ function RoleDetailPage() {
                                         permissions.map(permission => {
                                             if (permission.Group === 'Category') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -450,7 +451,7 @@ function RoleDetailPage() {
                                         permissions.map(permission => {
                                             if (permission.Group === 'Item Type') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -483,7 +484,7 @@ function RoleDetailPage() {
                                         permissions.map(permission => {
                                             if (permission.Group === 'Item') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -516,7 +517,7 @@ function RoleDetailPage() {
                                         permissions.map(permission => {
                                             if (permission.Group === 'Role') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
@@ -549,7 +550,7 @@ function RoleDetailPage() {
                                         permissions.map(permission => {
                                             if (permission.Group === 'User') {
                                                 return (
-                                                    <Grid item xl={3} md={3} sm={6} xs={12}>
+                                                    <Grid key={permission._id} item xl={3} md={3} sm={6} xs={12}>
                                                         <Box key={permission._id}>
                                                             <Typography fontWeight={500} fontSize='15px'>
                                                                 <span style={{ marginRight: '8px', backgroundColor: permissionsArray.indexOf(permission._id) !== -1 ? generalTheme.palette.StatusColors.success : generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>

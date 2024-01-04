@@ -115,16 +115,21 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
                 <AccordionDetails>
                     {
                         columns.map(item => {
-                            if (item.Filter) {
-                                if (item.Type === 'String'){
-                                    return  <StyledTableFilterInput label={item.Label} name={item.Name} value={filters[item.Name]} onChange={handleFilterChange} />;
-                                } else if (item.Type === ''){
-                                    
-                                }
+                            if (item.Filter && item.Type === 'String') {
+                                return (
+                                    <StyledTableFilterInput
+                                        key={item.Name}
+                                        label={item.Label}
+                                        name={item.Name}
+                                        value={filters[item.Name]}
+                                        onChange={handleFilterChange}
+                                    />
+                                );
                             }
+                            return null;
                         })
                     }
-                   
+
                     <StyledFilterClearButton onClick={clearFilters}>Clear Filters</StyledFilterClearButton>
                 </AccordionDetails>
             </Accordion>
@@ -199,7 +204,7 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
                                                     ) : (
                                                         <Typography style={{ display: 'flex', alignItems: 'center' }}>
                                                             <span style={{ marginRight: '8px', backgroundColor: generalTheme.palette.StatusColors.danger, width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block' }}></span>
-                                                            Active
+                                                            Deactive
                                                         </Typography>
                                                     )}
                                                 </TableCell>
@@ -217,23 +222,23 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
                                                 </TableCell>
                                             );
                                         } else if (item.Type === 'Role') {
-                                            if (row[item.Name].Name === 'Admin' || row[item.Name].Name === 'System Admin') {
-                                                return <TableCell key={item.Name}>
-                                                    <Badge sx={{ color: 'White', backgroundColor: 'rgb(0, 200, 83)', pl: 1, pr: 1, pt: 0.5, pb: 0.5, borderRadius: '10px' }}>
-                                                        <Typography fontSize='10px'>
-                                                            {row[item.Name].Name}
-                                                        </Typography>
-                                                    </Badge>
-                                                </TableCell>;
-                                            } else {
-                                                return <TableCell key={item.Name}>
-                                                    <Badge sx={{ color: 'White', backgroundColor: 'rgb(33, 150, 243)', pl: 1, pr: 1, pt: 0.5, pb: 0.5, borderRadius: '10px' }}>
-                                                        <Typography fontSize='10px'>
-                                                            {row[item.Name].Name}
-                                                        </Typography>
-                                                    </Badge></TableCell>;
-                                            }
-
+                                            return (
+                                                <React.Fragment key={item.Type}>
+                                                    <TableCell key={`${item.Name}_`}>
+                                                        {row.Roles.map((role, index) => (
+                                                            <Badge sx={{
+                                                                color: 'White',
+                                                                backgroundColor: role.Name === 'Admin' || role.Name === 'System Admin' ? 'rgb(0, 200, 83)' : 'rgb(33, 150, 243)',
+                                                                pl: 1, pr: 1, pt: 0.5, pb: 0.5, borderRadius: '10px'
+                                                            }}>
+                                                                <Typography fontSize='10px'>
+                                                                    {role.Name}
+                                                                </Typography>
+                                                            </Badge>
+                                                        ))}
+                                                    </TableCell>
+                                                </React.Fragment>
+                                            );
                                         }
                                         return null; // Eklenen bir return ifadesi
                                     })}

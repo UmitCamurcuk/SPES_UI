@@ -40,7 +40,8 @@ const HistoryTable = ({ historyData }) => {
                                 <TableCell>{row.Description}</TableCell>
                                 <TableCell>{`${row.CreatedUser.Name} ${row.CreatedUser.LastName}`}</TableCell>
                                 <TableCell>{`${row.UpdatedUser.Name} ${row.UpdatedUser.LastName}`}</TableCell>
-                                <TableCell>{row.UpdatedUser.Role.Name}</TableCell>
+                                {/* <TableCell>{row.UpdatedUser.Role.Name}</TableCell> */}
+                                <TableCell>1234</TableCell>
                                 <TableCell>{row.createdAt}</TableCell>
                             </TableRow>
                             <TableRow>

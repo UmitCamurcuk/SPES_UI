@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import store from './Redux/store';
 import { Provider } from 'react-redux'
-
 import HomePage from './Pages/Home/HomePage';
 import LoginPage from './Pages/Auth/LoginPage';
 import ItemListPage from './Pages/Item/ItemListPage';
@@ -32,6 +31,7 @@ import PermissionsIndexPage from './Pages/System/Permissions/PermissionsIndexPag
 import RolesIndexPage from './Pages/System/Roles/RolesIndexPage';
 import CreatePermissionPage from './Pages/System/Permissions/CreatePermissionPage';
 import RoleDetailPage from './Pages/System/Roles/RoleDetailPage';
+import CreateRolePage from './Pages/System/Roles/CreateRolePage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -154,6 +154,12 @@ const router = createBrowserRouter([
     path: "/System/Roles",
     element: <PrivateRoute>
       <RolesIndexPage />
+    </PrivateRoute>,
+  },
+  {
+    path: "/System/Roles/Create",
+    element: <PrivateRoute>
+      <CreateRolePage />
     </PrivateRoute>,
   },
   {

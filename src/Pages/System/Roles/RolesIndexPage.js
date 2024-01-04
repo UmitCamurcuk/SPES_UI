@@ -1,17 +1,26 @@
 import React from 'react'
 import InternalLayout from '../../Layouts/InternalLayout'
-import { Grid, Typography } from '@mui/material'
+import { Grid } from '@mui/material'
 import SpesEngineDynamicTable from '../../../Components/Tables/SpesEngineDynamicTable';
+import { StyledPageHeaderDescriptionLabel, StyledPageHeaderLabel } from '../../../Components/Typographys/StyledTypographys';
+import { StyledCreateButton } from '../../../Components/Buttons/StyledButtons';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 
 function RolesIndexPage() {
     return (
         <InternalLayout>
 
             <Grid container spacing={2}>
-                <Grid item xl={12} md={12} xs={12}>
-                    <Typography>
-                        Roles Table
-                    </Typography>
+                <Grid item xl={10} lg={10} md={10} sm={12} xs={12}>
+                    <StyledPageHeaderLabel>
+                        Roles List
+                    </StyledPageHeaderLabel>
+                    <StyledPageHeaderDescriptionLabel>
+                        You can see and Create a new Role
+                    </StyledPageHeaderDescriptionLabel>
+                </Grid>
+                <Grid item xl={2} lg={2} md={2} sm={12} xs={12}>
+                    <StyledCreateButton onClick={() => window.location.href = '/System/Roles/Create'} startIcon={<AddCircleOutline />}>Create a new Role</StyledCreateButton>
                 </Grid>
 
                 <Grid item xl={12} md={12} xs={12}>
