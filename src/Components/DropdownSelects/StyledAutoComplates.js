@@ -25,7 +25,7 @@ export const StyledMultiSelectDropdown = styled(Autocomplete)({
 })
 
 export const StyledSelectDropdown = styled(Autocomplete)({
-    width: '330px',
+    width: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
     paddingBottom: 0,

@@ -9,7 +9,6 @@ import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 function RolesIndexPage() {
     return (
         <InternalLayout>
-
             <Grid container spacing={2}>
                 <Grid item xl={10} lg={10} md={10} sm={12} xs={12}>
                     <StyledPageHeaderLabel>

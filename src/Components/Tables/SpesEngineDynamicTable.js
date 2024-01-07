@@ -61,8 +61,8 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
         if (goToDetail) {
             window.location.href = clickedLinkAfterClick + row._id
         } else {
-            if (selectedRows.some(selectedRow => selectedRow.Code === row.Code)) {
-                setSelectedRows(selectedRows.filter(selectedRow => selectedRow.Code !== row.Code));
+            if (selectedRows.some(selectedRow => selectedRow._id === row._id)) {
+                setSelectedRows(selectedRows.filter(selectedRow => selectedRow._id !== row._id));
             } else {
                 setSelectedRows([...selectedRows, row]);
             }
@@ -158,13 +158,13 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
                     <TableBody>
                         {Array.isArray(dataRows) && dataRows.length > 0 ? (
                             // data bir dizi ise ve içinde öğeler varsa map fonksiyonunu kullan
-                            dataRows.map(row => (
 
+                            dataRows.map(row => (
                                 <TableRow sx={{ cursor: 'pointer' }} key={row._id} onClick={() => handleRowClick(row)}>
                                     {
                                         goToDetail !== true && <TableCell key='1'>
                                             <Checkbox
-                                                checked={selectedRows.some(selectedRow => selectedRow.Code === row.Code)}
+                                                checked={selectedRows.some(selectedRow => selectedRow._id === row._id)}
                                             />
                                         </TableCell>
                                     }
@@ -226,7 +226,7 @@ function SpesEngineDynamicTable({ api, columns, goToDetail, clickedLinkAfterClic
                                                 <React.Fragment key={item.Type}>
                                                     <TableCell key={`${item.Name}_`}>
                                                         {row.Roles.map((role, index) => (
-                                                            <Badge sx={{
+                                                            <Badge key={index} sx={{
                                                                 color: 'White',
                                                                 backgroundColor: role.Name === 'Admin' || role.Name === 'System Admin' ? 'rgb(0, 200, 83)' : 'rgb(33, 150, 243)',
                                                                 pl: 1, pr: 1, pt: 0.5, pb: 0.5, borderRadius: '10px'

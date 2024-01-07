@@ -13,6 +13,7 @@ import Tab from '@mui/material/Tab';
 import { StyledSpesEngineSwitch } from '../../../Components/Switchs/StyledSwitchs';
 import { generalTheme } from '../../../Theme/GeneralTheme';
 import SpesEngineDynamicTable from '../../../Components/Tables/SpesEngineDynamicTable';
+import HistoryTable from '../../../Components/Tables/HistoryTable';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -57,12 +58,14 @@ function RoleDetailPage() {
     const [value, setValue] = React.useState(0);
     const [permissions, SetPermissions] = useState([]);
     const [permissionsArray, setPermissionsArray] = useState([]);
+    const [selectedUsers,SetSelectedUsers] = useState([]);
 
     useEffect(() => {
         const getRoleData = async () => {
             const response = await getDataRequest(`/Role/getRole?_id=${params.id}`);
             SetRoleData(response);
             SetRoleDataRAW(response);
+            SetSelectedUsers(response.Users)
             setPermissionsArray(response.Permissions.map(permission => permission._id))
         }
 
@@ -81,10 +84,10 @@ function RoleDetailPage() {
         getHistory();
     }, [params])
 
+    useEffect(() => {console.log(selectedUsers)},[selectedUsers])
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-        console.log(history)
     };
 
     const handlePermissionChange = (e) => {
@@ -188,6 +191,8 @@ function RoleDetailPage() {
                                     link='/System/User/Detail/'
                                     goToDetail={false}
                                     canSelected={true}
+                                    defaultSelected={roleData.Users}
+                                    setClickedState={SetSelectedUsers}
                                     clickedLinkAfterClick='/System/User/Detail/'
                                     paramfilters={
                                         {
@@ -577,7 +582,25 @@ function RoleDetailPage() {
                         </CustomTabPanel>
 
                         <CustomTabPanel value={value} index={9}>
-                            History
+                            <Typography
+                                sx={{
+                                    fontSize: '18px'
+                                }}
+                            >
+                                Role History
+                            </Typography>
+
+                            <Typography
+                                sx={{
+                                    fontSize: '12px'
+                                }}
+                            >
+                                Here you can set which values ​the role can or cannot take depending on its type.
+                            </Typography>
+
+                            <HistoryTable historyData={history} />
+
+
                         </CustomTabPanel>
                     </Paper>
 

@@ -9,6 +9,10 @@ import Paper from '@mui/material/Paper';
 import Collapse from '@mui/material/Collapse';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Badge } from '@mui/material';
+import { ConvertInternalDateString } from '../../Scripts/DateTimes';
 
 const HistoryTable = ({ historyData }) => {
     const [selectedRow, setSelectedRow] = useState(null);
@@ -22,37 +26,80 @@ const HistoryTable = ({ historyData }) => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Attribute</TableCell>
-                        <TableCell>Attribute ID</TableCell>
+                        <TableCell />
+                        <TableCell>Entity Name</TableCell>
                         <TableCell>Description</TableCell>
-                        <TableCell>Created User</TableCell>
-                        <TableCell>Updated User</TableCell>
-                        <TableCell>User Role</TableCell>
-                        <TableCell>Timestamp</TableCell>
+                        <TableCell>Changed By</TableCell>
+                        <TableCell>User Roles</TableCell>
+                        <TableCell>Change Date</TableCell>
+                        <TableCell>Comment</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {historyData.map((row, index) => (
                         <React.Fragment key={row._id}>
                             <TableRow onClick={() => handleRowClick(index)}>
+                                <TableCell>
+                                    {selectedRow === index ? (
+                                        <KeyboardArrowUpIcon />
+                                    ) : (
+                                        <KeyboardArrowDownIcon />
+                                    )}
+                                </TableCell>
                                 <TableCell>{row.entityType}</TableCell>
-                                <TableCell>{row.entityId}</TableCell>
                                 <TableCell>{row.Description}</TableCell>
                                 <TableCell>{`${row.CreatedUser.Name} ${row.CreatedUser.LastName}`}</TableCell>
-                                <TableCell>{`${row.UpdatedUser.Name} ${row.UpdatedUser.LastName}`}</TableCell>
-                                {/* <TableCell>{row.UpdatedUser.Role.Name}</TableCell> */}
-                                <TableCell>1234</TableCell>
-                                <TableCell>{row.createdAt}</TableCell>
+                                <TableCell>
+                                    {row.UpdatedUser.Roles.map((role, index) => (
+                                        <Badge
+                                            key={`${row._id}_${index}`}
+                                            sx={{
+                                                color: 'White',
+                                                backgroundColor:
+                                                    role.Name === 'Admin' ||
+                                                    role.Name === 'System Admin'
+                                                        ? 'rgb(0, 200, 83)'
+                                                        : 'rgb(33, 150, 243)',
+                                                pl: 1,
+                                                pr: 1,
+                                                pt: 0.5,
+                                                pb: 0.5,
+                                                borderRadius: '10px',
+                                                mr: 1,
+                                                ml: 1,
+                                            }}
+                                        >
+                                            <Typography fontSize='10px'>
+                                                {role.Name}
+                                            </Typography>
+                                        </Badge>
+                                    ))}
+                                </TableCell>
+                                <TableCell>
+                                    {ConvertInternalDateString(row.createdAt)}
+                                </TableCell>
+                                <TableCell>{row.Comment}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell colSpan={6}>
-                                    <Collapse in={selectedRow === index} timeout="auto" unmountOnExit>
+                                <TableCell colSpan={7}>
+                                    <Collapse
+                                        in={selectedRow === index}
+                                        timeout='auto'
+                                        unmountOnExit
+                                    >
                                         <Box margin={1}>
-                                            <Typography variant="h5" gutterBottom component="div">
+                                            <Typography
+                                                variant='h5'
+                                                gutterBottom
+                                                component='div'
+                                            >
                                                 Changes
                                             </Typography>
 
-                                            <Table size="small" aria-label="purchases">
+                                            <Table
+                                                size='small'
+                                                aria-label='purchases'
+                                            >
                                                 <TableHead>
                                                     <TableRow>
                                                         <TableCell>
@@ -73,15 +120,44 @@ const HistoryTable = ({ historyData }) => {
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
-                                                    {Object.entries(row.ChangedValues).map(([key, value]) => (
+                                                    {Object.entries(
+                                                        row.ChangedValues
+                                                    ).map(([key, value]) => (
                                                         <TableRow key={key}>
-                                                            <TableCell>{key}</TableCell>
-                                                            <TableCell>{value.oldValue !== null && !Array.isArray(value.oldValue) ? value.oldValue : '-'}</TableCell>
                                                             <TableCell>
-                                                                {value.newValue !== null && Array.isArray(value.newValue) ? (
-                                                                    value.newValue.map((element, index) => (
-                                                                        <Typography key={index}>{element}</Typography>
-                                                                    ))
+                                                                {key}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {value.oldValue !==
+                                                                    null &&
+                                                                !Array.isArray(
+                                                                    value.oldValue
+                                                                )
+                                                                    ? value.oldValue
+                                                                    : '-'}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {value.newValue !==
+                                                                    null &&
+                                                                Array.isArray(
+                                                                    value.newValue
+                                                                ) ? (
+                                                                    value.newValue.map(
+                                                                        (
+                                                                            element,
+                                                                            index
+                                                                        ) => (
+                                                                            <Typography
+                                                                                key={
+                                                                                    index
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    element
+                                                                                }
+                                                                            </Typography>
+                                                                        )
+                                                                    )
                                                                 ) : (
                                                                     value.newValue
                                                                 )}

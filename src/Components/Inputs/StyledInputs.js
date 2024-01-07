@@ -57,7 +57,7 @@ export const StyledTableFilterInput = styled(TextField)({
 
 
 export const StyledSpesEngineInput = styled(TextField)({
-    width: '330px',
+    minWidth: '200px',
     marginLeft: 'auto',
     marginRight: 'auto',
     paddingBottom: 0,
@@ -69,8 +69,8 @@ export const StyledSpesEngineInput = styled(TextField)({
         '& input': {
             color: '#66799e',
             height: '43.59px',
-            fontSize: '14px',
-            fontWeight: 800,
+            fontSize: '12px',
+            fontWeight: 600,
             border: '1px solid #ddd',
             borderRadius: '20px',
             padding: '8px',
